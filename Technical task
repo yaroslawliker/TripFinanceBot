@@ -1,0 +1,13 @@
+    Bot must have customizible Categories.
+    Every Category has it's over budged.
+    User can add categories, set up budged, add transactions and see statistics,
+including how much money does it have.
+
+Chat example:
+    /add Transfer
+    Transfer category have been added.
+    /budged Transfer 30
+    Transfer now have budged of 30
+    /spend Transfer 30
+    /revent
+    Last transaction is deleted
