@@ -1,0 +1,28 @@
+
+    Database is a JSON file.
+    On the top of it is a dictionary with user id as a key.
+    Every user contains a catigories dictionary, each 
+has budged and transactions.
+    Example:
+{
+    "userid123": {
+        "categories": {
+            "Transfer": {
+                budged: 100
+                transactions: [
+                    {
+                        amount: 1.49,
+                        datatime: 01.01.2021 18:00
+                    },
+                    {
+                        amount: 2.56,
+                        data: 01.01.2021 18:00
+                    }
+                ]
+            },
+            ...
+        }
+    }
+
+    "userid456": ...
+}
