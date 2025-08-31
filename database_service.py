@@ -3,11 +3,20 @@ from json_service import JSONService
 class CategoryAlreadyExistsException:
     pass
 
+class NoSuchCategoryExistsException:
+    pass
+
 class DatabaseService():
 
+    # no-sql DB keys
     __CATEGORIES_KEY = "categories"
     __BUDGET_KEY = "budget"
     __TRANSACTIONS_KEY = "transactions"
+
+
+    ###
+    ### Common methods
+    ###
 
     def get_user_data_if_exists(user_id):
         user_id = str(user_id)
@@ -42,7 +51,13 @@ class DatabaseService():
         
         return user_data
 
+
+    ###
+    ### Use-case methods
+    ###
+
     def add_category(user_id:int, category:str, budged = 0):
+        """Adds category for the given user"""
         user_data = DatabaseService.get_user(user_id)
         
         categories = user_data[DatabaseService.__CATEGORIES_KEY]
@@ -56,13 +71,18 @@ class DatabaseService():
         }
 
         DatabaseService.save_user_data(user_id, user_data)
-        
-        
-        
-        
 
+    def change_budget(user_id:int, category:str, budget:int):
+        """Sets the budget for the given category"""
+        user_data = DatabaseService.get_user(user_id)
+
+        categories = user_data[DatabaseService.__CATEGORIES_KEY]
+
+        if category not in categories:
+            raise NoSuchCategoryExistsException(f"No category {category} for user {user_id}")
         
-    
-        
-        
+        category[DatabaseService.__BUDGET_KEY] = budget
+
+        DatabaseService
+
     
