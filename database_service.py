@@ -67,7 +67,7 @@ class DatabaseService():
         
         categories[category] = {
             DatabaseService.__BUDGET_KEY: budged,
-            DatabaseService.__TRANSACTIONS_KEY: dict()
+            DatabaseService.__TRANSACTIONS_KEY: []
         }
 
         DatabaseService.save_user_data(user_id, user_data)
