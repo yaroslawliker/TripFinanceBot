@@ -23,3 +23,6 @@ class Messages():
     SPEND_SUCCESS = "Spent {1} money on {0}."
 
     STATS_MONEY_LEFT = "Money left:\n"
+
+    SET_DATES_ORDER_ERROR = "Wrong usage. Start of the period must be before end of the period."
+    SET_DATES_SUCCESS = "Period start and finish are set up"
