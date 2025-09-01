@@ -10,11 +10,11 @@ class NoSuchCategoryExistsException(KeyError):
 class DatabaseService():
 
     # no-sql DB keys
-    __CATEGORIES_KEY = "categories"
-    __BUDGET_KEY = "budget"
-    __TRANSACTIONS_KEY = "transactions"
-    __MONEY_KEY = "money"
-    __DATETIME_KEY = "datetime"
+    CATEGORIES_KEY = "categories"
+    BUDGET_KEY = "budget"
+    TRANSACTIONS_KEY = "transactions"
+    MONEY_KEY = "money"
+    DATETIME_KEY = "datetime"
 
 
     ###
@@ -41,7 +41,7 @@ class DatabaseService():
         if not (user_data is None):
             raise RuntimeError(f"The user {user_id} is already registered")
         userdata = {
-            DatabaseService.__CATEGORIES_KEY : dict()
+            DatabaseService.CATEGORIES_KEY : dict()
         }
         DatabaseService.save_user_data(user_id, userdata)
 
@@ -63,14 +63,14 @@ class DatabaseService():
         """Adds category for the given user"""
         user_data = DatabaseService.get_user(user_id)
         
-        categories = user_data[DatabaseService.__CATEGORIES_KEY]
+        categories = user_data[DatabaseService.CATEGORIES_KEY]
 
         if category in categories:
             raise CategoryAlreadyExistsException(f"Category {category} of user {user_id} already exists!")
         
         categories[category] = {
-            DatabaseService.__BUDGET_KEY: budged,
-            DatabaseService.__TRANSACTIONS_KEY: []
+            DatabaseService.BUDGET_KEY: budged,
+            DatabaseService.TRANSACTIONS_KEY: []
         }
 
         DatabaseService.save_user_data(user_id, user_data)
@@ -79,12 +79,12 @@ class DatabaseService():
         """Sets the budget for the given category"""
         user_data = DatabaseService.get_user(user_id)
 
-        categories = user_data[DatabaseService.__CATEGORIES_KEY]
+        categories = user_data[DatabaseService.CATEGORIES_KEY]
 
         if category not in categories:
             raise NoSuchCategoryExistsException(f"No category {category} for user {user_id}")
         
-        categories[category][DatabaseService.__BUDGET_KEY] = budget
+        categories[category][DatabaseService.BUDGET_KEY] = budget
 
         DatabaseService.save_user_data(user_id, user_data)
 
@@ -94,7 +94,7 @@ class DatabaseService():
 
         assert isinstance(money, float)
 
-        categories = user_data[DatabaseService.__CATEGORIES_KEY]
+        categories = user_data[DatabaseService.CATEGORIES_KEY]
 
         if category not in categories:
             raise NoSuchCategoryExistsException(f"No category {category} for user {user_id}")
@@ -103,11 +103,11 @@ class DatabaseService():
             dt = datetime.datetime.now()
 
         transaction = {
-            DatabaseService.__MONEY_KEY:money,
-            DatabaseService.__DATETIME_KEY:str(dt)
+            DatabaseService.MONEY_KEY:money,
+            DatabaseService.DATETIME_KEY:str(dt)
         }
         
-        categories[category][DatabaseService.__TRANSACTIONS_KEY].append(transaction)
+        categories[category][DatabaseService.TRANSACTIONS_KEY].append(transaction)
 
         DatabaseService.save_user_data(user_id, user_data)
 
