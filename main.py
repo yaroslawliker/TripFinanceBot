@@ -1,7 +1,7 @@
 import telebot
 
 from messages import Messages
-from database_service import DatabaseService
+from database_service import DatabaseService, CategoryAlreadyExistsException, NoSuchCategoryExistsException
 
 from read_token import read_token
 
@@ -29,6 +29,8 @@ def add_handler(message):
         except ValueError:
             bot.send_message(message.chat.id, Messages.ADD_ARGUMENT_ERROR)
             return
+        except CategoryAlreadyExistsException:
+            bot.send_message(message.chat.id, Messages.CATEGORY_ALREADY_EXISTS.format(category))
     else:
         budget = 0
 
@@ -44,8 +46,24 @@ def change_handler(message):
         money = float(arguments[1])
         DatabaseService.change_budget(message.chat.id, category, money)
         bot.send_message(message.chat.id, Messages.CHANGE_SUCCESS.format(category, money))
+    except NoSuchCategoryExistsException:
+        bot.send_message(message.chat.id, Messages.NO_SUCH_CATEGORY.format(category))
     except (IndexError, ValueError):
         bot.send_message(message.chat.id, Messages.CHANGE_ARGUMENT_ERROR)
+
+@bot.message_handler(commands=["spend"])
+def spend_handler(message):
+    command = message.text[7:]
+    arguments = command.split(" ")
+    try:
+        category = arguments[0]
+        money = float(arguments[1])
+        DatabaseService.add_transaction(message.chat.id, category, money)
+        bot.send_message(message.chat.id, Messages.SPEND_SUCCESS.format(category, money))
+    except NoSuchCategoryExistsException:
+        bot.send_message(message.chat.id, Messages.NO_SUCH_CATEGORY.format(category))
+    except (IndexError, ValueError) as e:
+        bot.send_message(message.chat.id, Messages.SPEND_ARGUMENT_ERROR)
 
 bot.infinity_polling()
 

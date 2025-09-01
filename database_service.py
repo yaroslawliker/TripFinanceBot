@@ -1,3 +1,4 @@
+import datetime
 from json_service import JSONService
 
 class CategoryAlreadyExistsException(KeyError):
@@ -12,6 +13,8 @@ class DatabaseService():
     __CATEGORIES_KEY = "categories"
     __BUDGET_KEY = "budget"
     __TRANSACTIONS_KEY = "transactions"
+    __MONEY_KEY = "money"
+    __DATETIME_KEY = "datetime"
 
 
     ###
@@ -84,5 +87,31 @@ class DatabaseService():
         categories[category][DatabaseService.__BUDGET_KEY] = budget
 
         DatabaseService.save_user_data(user_id, user_data)
+
+    def add_transaction(user_id, category:str, money:float, dt:datetime.datetime=None):
+        """Adds transaction (spending) to the given category"""
+        user_data = DatabaseService.get_user(user_id)
+
+        assert isinstance(money, float)
+
+        categories = user_data[DatabaseService.__CATEGORIES_KEY]
+
+        if category not in categories:
+            raise NoSuchCategoryExistsException(f"No category {category} for user {user_id}")
+        
+        if (dt is None):
+            dt = datetime.datetime.now()
+
+        transaction = {
+            DatabaseService.__MONEY_KEY:money,
+            DatabaseService.__DATETIME_KEY:str(dt)
+        }
+        
+        categories[category][DatabaseService.__TRANSACTIONS_KEY].append(transaction)
+
+        DatabaseService.save_user_data(user_id, user_data)
+
+
+
 
     
