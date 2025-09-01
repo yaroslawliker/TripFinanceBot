@@ -16,3 +16,5 @@ class Messages():
 
     SPEND_ARGUMENT_ERROR = "Wrong usage. Correct example:\n/spend Transfer 7.5"
     SPEND_SUCCESS = "Spent {1} money on {0}."
+
+    STATS_MONEY_LEFT = "Money left:\n"

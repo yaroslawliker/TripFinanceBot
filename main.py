@@ -3,6 +3,8 @@ import telebot
 from messages import Messages
 from database_service import DatabaseService, CategoryAlreadyExistsException, NoSuchCategoryExistsException
 
+import left_handling
+
 from read_token import read_token
 
 TOKEN = read_token()
@@ -64,6 +66,14 @@ def spend_handler(message):
         bot.send_message(message.chat.id, Messages.NO_SUCH_CATEGORY.format(category))
     except (IndexError, ValueError) as e:
         bot.send_message(message.chat.id, Messages.SPEND_ARGUMENT_ERROR)
+
+@bot.message_handler(commands=["left"])
+def left_handler(message):
+    categories = DatabaseService.get_categories(message.chat.id)
+    result = left_handling.get_fromatted_stats(categories)
+    bot.send_message(message.chat.id, result)
+
+
 
 bot.infinity_polling()
 

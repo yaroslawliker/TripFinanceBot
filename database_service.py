@@ -111,6 +111,10 @@ class DatabaseService():
 
         DatabaseService.save_user_data(user_id, user_data)
 
+    def get_categories(user_id):
+        user_data = DatabaseService.get_user(user_id)
+        return user_data[DatabaseService.CATEGORIES_KEY]
+
 
 
 
