@@ -81,8 +81,8 @@ class DatabaseService():
         if category not in categories:
             raise NoSuchCategoryExistsException(f"No category {category} for user {user_id}")
         
-        category[DatabaseService.__BUDGET_KEY] = budget
+        categories[category][DatabaseService.__BUDGET_KEY] = budget
 
-        DatabaseService
+        DatabaseService.save_user_data(user_id, user_data)
 
     

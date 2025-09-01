@@ -39,7 +39,13 @@ def add_handler(message):
 def change_handler(message):
     command = message.text[8:]
     arguments = command.split(" ")
-    DatabaseService.change_budget(arguments)
+    try:
+        category = arguments[0]
+        money = int(arguments[1])
+        DatabaseService.change_budget(message.chat.id, category, money)
+        bot.send_message(message.chat.id, Messages.CHANGE_SUCCESS.format(category, money))
+    except (IndexError, ValueError):
+        bot.send_message(message.chat.id, Messages.CHANGE_ARGUMENT_ERROR)
 
 bot.infinity_polling()
 

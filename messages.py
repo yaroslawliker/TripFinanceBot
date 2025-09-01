@@ -7,3 +7,6 @@ class Messages():
 
     ADD_ARGUMENT_ERROR = "Wrong usage. Correct example:\n/add Transfer 150"
     ADD_CATEGORY_CREATED = "Category '{0}' created with budget {1}"
+
+    CHANGE_ARGUMENT_ERROR = "Wrong usage. Correct example:\n/change Transfer 175"
+    CHANGE_SUCCESS = "{0}'s budged was changed to {1}."
