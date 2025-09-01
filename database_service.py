@@ -1,9 +1,9 @@
 from json_service import JSONService
 
-class CategoryAlreadyExistsException:
+class CategoryAlreadyExistsException(KeyError):
     pass
 
-class NoSuchCategoryExistsException:
+class NoSuchCategoryExistsException(KeyError):
     pass
 
 class DatabaseService():
