@@ -25,7 +25,7 @@ def add_handler(message):
     category = arguments[0]
     if len(arguments) > 1:
         try:
-            budget = int(arguments[1])
+            budget = float(arguments[1])
         except ValueError:
             bot.send_message(message.chat.id, Messages.ADD_ARGUMENT_ERROR)
             return
@@ -41,7 +41,7 @@ def change_handler(message):
     arguments = command.split(" ")
     try:
         category = arguments[0]
-        money = int(arguments[1])
+        money = float(arguments[1])
         DatabaseService.change_budget(message.chat.id, category, money)
         bot.send_message(message.chat.id, Messages.CHANGE_SUCCESS.format(category, money))
     except (IndexError, ValueError):

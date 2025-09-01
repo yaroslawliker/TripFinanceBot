@@ -56,7 +56,7 @@ class DatabaseService():
     ### Use-case methods
     ###
 
-    def add_category(user_id:int, category:str, budged = 0):
+    def add_category(user_id:int, category:str, budged:float = 0):
         """Adds category for the given user"""
         user_data = DatabaseService.get_user(user_id)
         
@@ -72,7 +72,7 @@ class DatabaseService():
 
         DatabaseService.save_user_data(user_id, user_data)
 
-    def change_budget(user_id:int, category:str, budget:int):
+    def change_budget(user_id:int, category:str, budget:float):
         """Sets the budget for the given category"""
         user_data = DatabaseService.get_user(user_id)
 
