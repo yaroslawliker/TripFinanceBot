@@ -4,7 +4,8 @@ import telebot
 from messages import Messages
 from database_service import DatabaseService, CategoryAlreadyExistsException, NoSuchCategoryExistsException, StartDaysNotBeforeEndDateException
 
-import left_handling
+import handling.left as left
+import handling.today as today
 
 from read_token import read_token
 
@@ -71,11 +72,11 @@ def spend_handler(message):
 @bot.message_handler(commands=["left"])
 def left_handler(message):
     categories = DatabaseService.get_categories(message.chat.id)
-    result = left_handling.get_fromatted_stats(categories)
+    result = left.get_fromatted_stats(categories)
     bot.send_message(message.chat.id, result)
 
 @bot.message_handler(commands=["setdates"])
-def setdates(message):
+def setdates_handler(message):
     command = message.text[10:]
     arguments = command.split(" ")
     try: 
@@ -93,10 +94,11 @@ def setdates(message):
     except StartDaysNotBeforeEndDateException:
         bot.send_message(message.chat.id, Messages.SET_DATES_ORDER_ERROR)
     except Exception as e:
-        print(e.args)
-        bot.send_message(message.chat.id, "Wrong usage. Example:\n/setdates Transfer 10.01.2024 17.01.2024")
+        bot.send_message(message.chat.id, Messages.SET_DATES_EXAMPLE)
 
-    
+@bot.message_handler(commands=["today"])
+def today_handler(message):
+    today.handle_today(message, bot)    
 
 
 bot.infinity_polling()

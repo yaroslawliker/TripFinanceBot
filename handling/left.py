@@ -11,7 +11,7 @@ def calculate_total_spend(category):
     return sum
 
 def calculate_totals(categories:dict):
-    """Takes categories dict and returns ... """
+    """Takes categories dict and returns dict with category names as keys and 'totals' and 'budget' keys"""
     result = {}
     for key in categories.keys():
         result[key] = {

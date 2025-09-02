@@ -26,3 +26,6 @@ class Messages():
 
     SET_DATES_ORDER_ERROR = "Wrong usage. Start of the period must be before end of the period."
     SET_DATES_SUCCESS = "Period start and finish are set up"
+    SET_DATES_EXAMPLE = "Wrong usage. Example:\n/setdates Transfer 10.01.2024 17.01.2024"
+
+    TODAY_WRONG_USAGE = "Wrong usage. Just write '/today'"
