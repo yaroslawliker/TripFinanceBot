@@ -54,6 +54,6 @@ def handle_today(message, bot):
         if today_left is None:
             result += f"{key}: out of period\n"
         else:       
-            result += f"{key}: {today_left}\n"
+            result += f"{key}: {round(today_left, 2)}\n"
 
     bot.send_message(message.chat.id, result)
