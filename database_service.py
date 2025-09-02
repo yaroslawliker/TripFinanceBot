@@ -143,9 +143,9 @@ class DatabaseService():
     def get_dates(user_id, category:str):
         assert isinstance(category, str)
 
-        user_data = DatabaseService.get_user()
+        user_data = DatabaseService.get_user(user_id)
 
-        categories = user_data[DatabaseService.TRANSACTIONS_KEY]
+        categories = user_data[DatabaseService.CATEGORIES_KEY]
         if category not in categories:
             raise NoSuchCategoryExistsException(f"No category {category} for user {user_id}")
         
