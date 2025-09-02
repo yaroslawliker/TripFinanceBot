@@ -16,8 +16,7 @@ def find_today_money(startdate, enddate, today, budget, sum) -> float:
     days_today = delta_today.days + 1
 
     # All the meth
-    spent = budget - sum
-    today_left = (budget / days_full) * days_today  - spent
+    today_left = (budget / days_full) * days_today  - sum
 
     return today_left
 
