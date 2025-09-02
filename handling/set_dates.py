@@ -1,6 +1,6 @@
 import datetime
 
-from database_service import DatabaseService, NoSuchCategoryExistsException, StartDaysNotBeforeEndDateException
+import database_service as database
 from messages import Messages
 
 def handle_set_dates(message, bot):
@@ -14,11 +14,11 @@ def handle_set_dates(message, bot):
         startdate = datetime.datetime.strptime(start, FORMAT).date()
         enddate = datetime.datetime.strptime(end, FORMAT).date()
 
-        DatabaseService.set_dates(message.chat.id, category, startdate, enddate)
+        database.set_dates(message.chat.id, category, startdate, enddate)
         bot.send_message(message.chat.id, Messages.SET_DATES_SUCCESS)
-    except NoSuchCategoryExistsException:
+    except database.NoSuchCategoryExistsException:
         bot.send_message(message.chat.id, Messages.NO_SUCH_CATEGORY.format(category))
-    except StartDaysNotBeforeEndDateException:
+    except database.StartDaysNotBeforeEndDateException:
         bot.send_message(message.chat.id, Messages.SET_DATES_ORDER_ERROR)
     except Exception as e:
         bot.send_message(message.chat.id, Messages.SET_DATES_EXAMPLE)

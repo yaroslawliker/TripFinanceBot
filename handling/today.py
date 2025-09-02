@@ -1,8 +1,8 @@
 import datetime
 
 import handling.left as left
+import database_service as database
 from messages import Messages
-from database_service import DatabaseService
 
 def find_today_money(startdate, enddate, today, budget, sum) -> float:
     
@@ -27,27 +27,27 @@ def handle_today(message, bot):
         bot.send_message(message.chat.id, Messages.TODAY_WRONG_USAGE)
         return
 
-    categories = DatabaseService.get_categories(message.chat.id)
+    categories = database.get_categories(message.chat.id)
     totals = left.calculate_totals(categories)
     
     result = "Today you have:\n"
     for key in totals:
 
         # Getting dates from db
-        dates = DatabaseService.get_dates(message.chat.id, key)
+        dates = database.get_dates(message.chat.id, key)
         # Skip if no dates are set up
         if dates is None:
             continue
 
-        startdate = dates[DatabaseService.STARTDATE_KEY]
-        enddate = dates[DatabaseService.ENDDATE_KEY]
+        startdate = dates[database.STARTDATE_KEY]
+        enddate = dates[database.ENDDATE_KEY]
         
         today = datetime.datetime.now().date()
 
         # Getting currect category sum and budget
         total = totals[key]
         sum = total[left.TOTALS_KEY]
-        budget = total[DatabaseService.BUDGET_KEY]
+        budget = total[database.BUDGET_KEY]
 
         today_left = find_today_money(startdate, enddate, today, budget, sum)
 

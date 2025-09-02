@@ -1,5 +1,11 @@
 import telebot
 
+
+from read_token import read_token
+
+import database_service as database
+from messages import Messages
+
 # Import handlers
 import handling.change
 import handling.set_dates
@@ -7,10 +13,6 @@ import handling.spend
 import handling.add
 import handling.left
 import handling.today
-
-from messages import Messages
-from database_service import DatabaseService
-from read_token import read_token
 
 TOKEN = read_token()
 
@@ -34,7 +36,7 @@ def spend_handler(message):
 
 @bot.message_handler(commands=["left"])
 def left_handler(message):
-    categories = DatabaseService.get_categories(message.chat.id)
+    categories = database.get_categories(message.chat.id)
     result = handling.left.get_fromatted_stats(categories)
     bot.send_message(message.chat.id, result)
 
