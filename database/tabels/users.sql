@@ -1,0 +1,3 @@
+CREATE TABLE users {
+    chat_id PRIMARY KEY INTEGER
+}
