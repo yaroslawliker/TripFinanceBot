@@ -3,7 +3,7 @@ import datetime
 
 class GenericDAO:
     def __init__(self, connection: sqlite3.Connection):
-        self.__connection = connection
+        self._connection = connection
 
     def datetime_to_str(dt: datetime.datetime) -> str:
         if dt is None:
