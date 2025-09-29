@@ -1,3 +1,3 @@
-CREATE TABLE users {
-    chat_id PRIMARY KEY INTEGER
-}
+CREATE TABLE users (
+    chat_id INTEGER PRIMARY KEY 
+)
