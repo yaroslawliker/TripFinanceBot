@@ -10,11 +10,11 @@ class CategoryDAO(GenericDAO):
         id = row[0]
         name = row[1]
         budget = row[2]
-        start_datetime = GenericDAO.datetime_to_str(row[3])
-        end_datetime = GenericDAO.datetime_to_str(row[4])
+        start_date = GenericDAO.date_to_str(row[3])
+        end_date = GenericDAO.date_to_str(row[4])
         user_id = row[5]
 
-        return Category(id, name, budget, start_datetime, end_datetime, user_id)
+        return Category(id, name, budget, start_date, end_date, user_id)
 
     def add_category(self, category: Category):
         self._connection.execute(
@@ -25,7 +25,7 @@ class CategoryDAO(GenericDAO):
     def update_category(self, category: Category):
         self._connection.execute(
             "UPDATE categories SET name=?, budget=?, start_datetime=?, end_datetime=?, user_id=? WHERE id=?",
-            (category.name, category.budget, category.start_dateime, category.end_datetime, category.user_id, category.id)
+            (category.name, category.budget, category.start_date, category.end_date, category.user_id, category.id)
         )
     
     def get_category_by_user_and_name(self, name: str, chat_id:int):

@@ -9,13 +9,13 @@ class User:
 class Category:
     def __init__(self, id: int, 
                  name: str, budget: float, 
-                 start_datetime: datetime.datetime, end_datetime: datetime.datetime, 
+                 start_date: datetime.date, end_date: datetime.date, 
                  user_id: int):
         self.id = id
         self.name = name
         self.budget = budget
-        self.start_dateime = start_datetime
-        self.end_datetime = end_datetime
+        self.start_date = start_date
+        self.end_date = end_date
         self.user_id = user_id
 
 
