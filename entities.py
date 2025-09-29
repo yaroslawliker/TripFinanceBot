@@ -16,7 +16,7 @@ class Category:
         self.budget = budget
         self.start_date = start_date
         self.end_date = end_date
-        self.user_id = user_id
+        self.chat_id = user_id
 
 
 class Expense:

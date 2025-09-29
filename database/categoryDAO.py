@@ -19,13 +19,13 @@ class CategoryDAO(GenericDAO):
     def add_category(self, category: Category):
         self._connection.execute(
             "INSERT INTO categories(name, budget, chat_id) VALUES (?, ?, ?)", 
-            (category.name, category.budget, category.user_id)
+            (category.name, category.budget, category.chat_id)
         )
     
     def update_category(self, category: Category):
         self._connection.execute(
-            "UPDATE categories SET name=?, budget=?, start_datetime=?, end_datetime=?, user_id=? WHERE id=?",
-            (category.name, category.budget, category.start_date, category.end_date, category.user_id, category.id)
+            "UPDATE categories SET name=?, budget=?, start_date=?, end_date=?, chat_id=? WHERE id=?",
+            (category.name, category.budget, category.start_date, category.end_date, category.chat_id, category.id)
         )
     
     def get_category_by_user_and_name(self, name: str, chat_id:int):
