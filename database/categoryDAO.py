@@ -18,7 +18,7 @@ class CategoryDAO(GenericDAO):
 
     def add_category(self, category: Category):
         self._connection.execute(
-            "INSERT INTO categories(name, budget, user_id) VALUES (?, ?, ?)", 
+            "INSERT INTO categories(name, budget, chat_id) VALUES (?, ?, ?)", 
             (category.name, category.budget, category.user_id)
         )
     
