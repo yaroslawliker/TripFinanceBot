@@ -4,7 +4,11 @@ import database.sql_loader
 class Test_sql_loader(unittest.TestCase):
 
     def setUp(self):
+        self.original_sql_folder = database.sql_loader.SQL_FILDER_PATH
         database.sql_loader.SQL_FILDER_PATH = "tests/database/"
+
+    def tearDown(self):
+        database.sql_loader.SQL_FILDER_PATH = self.original_sql_folder
 
     def test_load_sql_from_file__no_file(self):
         self.assertRaises(
