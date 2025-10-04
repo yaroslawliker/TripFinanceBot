@@ -1,7 +1,7 @@
 import unittest
 import datetime
 import sqlite3
-from database.expenseDAO import ExpenseDAO, Expense
+from database.daos.expenseDAO import ExpenseDAO, Expense
 from database.sql_loader import load_sql_from_file
 
 class TestUserDAO(unittest.TestCase):
@@ -32,7 +32,7 @@ class TestUserDAO(unittest.TestCase):
         self.assertEqual(row[4], expense.category_id)
 
     def test_get_expenses_by_category_id__no_expenses(self):
-        result = self.expenseDAO.get_by_category_id(1)
+        result = self.expenseDAO.get_all_by_category(1)
         expected = []
 
         self.assertEqual(expected, result)
@@ -47,7 +47,7 @@ class TestUserDAO(unittest.TestCase):
         for expense in expenses:
             self.expenseDAO.add(expense)
 
-        result = self.expenseDAO.get_by_category_id(2)
+        result = self.expenseDAO.get_all_by_category(2)
 
         self.assertEqual(len(expenses), len(result))
 

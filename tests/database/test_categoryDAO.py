@@ -1,7 +1,7 @@
 import unittest
 import datetime
 import sqlite3
-from database.categoryDAO import CategoryDAO, Category
+from database.daos.categoryDAO import CategoryDAO, Category
 from database.sql_loader import load_sql_from_file
 
 class TestUserDAO(unittest.TestCase):
