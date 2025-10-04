@@ -20,7 +20,7 @@ class TestUserDAO(unittest.TestCase):
 
     def test_add_expense(self):
         expense = Expense(None, 123.45, datetime.datetime(2025, 10, 5, 14, 30), "Test purpose", 1)
-        self.expenseDAO.add_expense(expense)
+        self.expenseDAO.add(expense)
 
         cursor = self.conn.execute("SELECT * FROM expenses WHERE money = ?", (expense.money,))
         row = cursor.fetchone()
@@ -32,7 +32,7 @@ class TestUserDAO(unittest.TestCase):
         self.assertEqual(row[4], expense.category_id)
 
     def test_get_expenses_by_category_id__no_expenses(self):
-        result = self.expenseDAO.get_expenses_by_category_id(1)
+        result = self.expenseDAO.get_by_category_id(1)
         expected = []
 
         self.assertEqual(expected, result)
@@ -45,9 +45,9 @@ class TestUserDAO(unittest.TestCase):
         ]
 
         for expense in expenses:
-            self.expenseDAO.add_expense(expense)
+            self.expenseDAO.add(expense)
 
-        result = self.expenseDAO.get_expenses_by_category_id(2)
+        result = self.expenseDAO.get_by_category_id(2)
 
         self.assertEqual(len(expenses), len(result))
 

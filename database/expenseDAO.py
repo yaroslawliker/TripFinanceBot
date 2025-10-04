@@ -4,7 +4,8 @@ from entities import Expense
 
 class ExpenseDAO(GenericDAO):
 
-    def _expense_from_row(row):
+    def _from_row(row):
+        """ Creates Expense object from the given row from a database """
         id = row[0]
         money = row[1]
         datetime = GenericDAO.str_to_datetime(row[2])
@@ -13,13 +14,17 @@ class ExpenseDAO(GenericDAO):
 
         return Expense(id, money, datetime, purpose, category_id)
     
-    def add_expense(self, expense: Expense):
+    def add(self, expense: Expense):
+        """ 
+        Adds a new expense from the given. 
+        The id field is ignored, new id is stored in the database 
+        """
         self._connection.execute(
             "INSERT INTO expenses(money, datetime, purpose, category_id) VALUES (?, ?, ?, ?)",
             (expense.money, expense.datetime, expense.purpose, expense.category_id)
         )
     
-    def get_expenses_by_category_id(self, category_id: int) -> list:
+    def get_by_category_id(self, category_id: int) -> list:
         expenses = []
 
         result = self._connection.execute(
@@ -27,7 +32,7 @@ class ExpenseDAO(GenericDAO):
         ).fetchall()
 
         for row in result:
-            expenses.append(ExpenseDAO._expense_from_row(row))
+            expenses.append(ExpenseDAO._from_row(row))
 
         return expenses
     
