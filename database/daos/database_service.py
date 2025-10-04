@@ -2,10 +2,7 @@ import datetime
 
 from entities import User, Category, Expense
 
-from database.userDAO import UserDAO
-from database.categoryDAO import CategoryDAO
-from database.expenseDAO import ExpenseDAO
-
+from database.daos import UserDAO, CategoryDAO, ExpenseDAO
 
 ###
 ### Exception classes

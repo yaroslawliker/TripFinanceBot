@@ -1,4 +1,4 @@
-import database_service as database
+import database.database_service as database
 from messages import Messages
 
 TOTALS_KEY = "totals"

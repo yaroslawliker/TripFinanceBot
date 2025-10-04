@@ -1,7 +1,7 @@
 import sqlite3
 
 from entities import Category
-from database.genericDAO import GenericDAO
+from database.daos.genericDAO import GenericDAO
 
 class CategoryDAO(GenericDAO):
 

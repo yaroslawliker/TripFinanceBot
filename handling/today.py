@@ -1,7 +1,7 @@
 import datetime
 
 import handling.left as left
-import database_service as database
+import database.database_service as database
 from messages import Messages
 
 def find_today_money(startdate, enddate, today, budget, sum) -> float:

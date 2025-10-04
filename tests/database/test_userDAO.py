@@ -1,6 +1,6 @@
 import unittest
 import sqlite3
-from database.userDAO import UserDAO
+from database.daos.userDAO import UserDAO
 from entities import User
 from database.sql_loader import load_sql_from_file
 
