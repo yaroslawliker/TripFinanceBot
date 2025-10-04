@@ -2,10 +2,11 @@ import datetime
 
 import database_service as database
 from messages import Messages
+from handling._args import extract_args
 
 def handle_set_dates(message, bot):
-    command = message.text[10:]
-    arguments = command.split(" ")
+    arguments = extract_args(message.text)
+    
     try: 
         category = arguments[0]
         start = arguments[1]

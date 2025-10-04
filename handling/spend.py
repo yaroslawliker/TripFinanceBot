@@ -1,9 +1,10 @@
 import database_service as database
 from messages import Messages
+from handling._args import extract_args
 
 def handle_spend(message, bot):
-    command = message.text[7:]
-    arguments = command.split(" ")
+    arguments = extract_args(message.text)
+    
     try:
         category = arguments[0]
         money = float(arguments[1])

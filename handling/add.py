@@ -1,8 +1,9 @@
 from messages import Messages
 import database_service as database
+from handling._args import extract_args
+
 def handle_add(message, bot):
-    command = message.text[5:]
-    arguments = command.split(" ")
+    arguments = extract_args(message.text)
 
     if len(arguments) < 1 or len(arguments) > 2:
         bot.send_message(message.chat.id, Messages.ADD_ARGUMENT_ERROR)
