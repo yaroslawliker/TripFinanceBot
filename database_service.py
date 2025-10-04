@@ -7,6 +7,10 @@ from database.categoryDAO import CategoryDAO
 from database.expenseDAO import ExpenseDAO
 
 
+###
+### Exception classes
+###
+
 class CategoryAlreadyExistsException(KeyError):
     def __init__(self, user_id:int, category:str):
         self.user_id = user_id
@@ -25,10 +29,8 @@ class StartDaysNotBeforeEndDateException(ValueError):
         self.enddate = enddate
         super().__init__(f"Startdate {startdate} is not before enddate {enddate}")
 
-###
-### Common methods
-###
 
+### Database service class
 class DatabaseService:
 
     def __init__(self, userDAO: UserDAO, categoryDAO: CategoryDAO, expenseDAO: ExpenseDAO):
@@ -36,6 +38,11 @@ class DatabaseService:
         self._categoryDAO = categoryDAO
         self._expenseDAO = expenseDAO
 
+
+    ###
+    ### User methods
+    ### 
+    
     def register_user(self, user_id:int):
         if self._userDAO.is_user_exists(user_id):
             raise RuntimeError(f"The user {user_id} is already registered")
@@ -50,6 +57,11 @@ class DatabaseService:
             self.register_user(user_id)
         
         return User(user_id)
+    
+
+    ###
+    ### Category methods
+    ###
     
     def add_category(self, user_id:int, name:str, budget:float=0):
         if not self._userDAO.is_user_exists(user_id):
@@ -92,6 +104,11 @@ class DatabaseService:
         return self._categoryDAO.get_all_by_user(user_id)
     
 
+    ###
+    ### Expense methods
+    ###
+
+    
 
 def add_transaction(user_id, category:str, money:float, dt:datetime.datetime=None):
     """Adds transaction (spending) to the given category"""
