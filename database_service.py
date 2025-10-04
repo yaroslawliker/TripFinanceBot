@@ -1,5 +1,11 @@
 import datetime
-from json_service import JSONService
+
+from entities import User, Category, Expense
+
+from database.userDAO import UserDAO
+from database.categoryDAO import CategoryDAO
+from database.expenseDAO import ExpenseDAO
+
 
 class CategoryAlreadyExistsException(KeyError):
     pass
@@ -10,74 +16,53 @@ class NoSuchCategoryExistsException(KeyError):
 class StartDaysNotBeforeEndDateException(ValueError):
     pass
 
-# no-sql DB keys
-CATEGORIES_KEY = "categories"
-BUDGET_KEY = "budget"
-TRANSACTIONS_KEY = "transactions"
-MONEY_KEY = "money"
-DATETIME_KEY = "datetime"
-STARTDATE_KEY = "startdate"
-ENDDATE_KEY = "enddate"
-
-DATE_FORMAT = "%d.%m.%Y"
-
 ###
 ### Common methods
 ###
 
-def get_user_data_if_exists(user_id):
-    user_id = str(user_id)
-    database = JSONService.get_json()
+class DatabaseService:
 
-    if user_id in database:
-        return database[user_id]
-    else:
-        return None
+    def __init__(self, userDAO: UserDAO, categoryDAO: CategoryDAO, expenseDAO: ExpenseDAO):
+        self._userDAO = userDAO
+        self._categoryDAO = categoryDAO
+        self._expenseDAO = expenseDAO
 
-def save_user_data(user_id, user_data):
-    database = JSONService.get_json()
-    database[str(user_id)] = user_data
-    JSONService.save_json(database)
+    def register_user(self, user_id:int):
+        if self._userDAO.is_user_exists(user_id):
+            raise RuntimeError(f"The user {user_id} is already registered")
+        
+        self._userDAO.add_user(User(user_id))
 
-def register_user(user_id):
+    def is_user_registered(self, user_id:int) -> bool:
+        return self._userDAO.is_user_exists(user_id)
     
-    user_data = get_user_data_if_exists(user_id)
-    if not (user_data is None):
-        raise RuntimeError(f"The user {user_id} is already registered")
-    userdata = {
-        CATEGORIES_KEY : dict()
-    }
-    save_user_data(user_id, userdata)
-
-def get_user(user_id:int):
-    user_data = get_user_data_if_exists(user_id)
-
-    if user_data is None:
-        register_user(user_id)
-        user_data = user_data = get_user_data_if_exists(user_id)
+    def get_user(self, user_id:int) -> User:
+        if not self._userDAO.is_user_exists(user_id):
+            self.register_user(user_id)
+        
+        return User(user_id)
     
-    return user_data
-
-
-###
-### Use-case methods
-###
-
-def add_category(user_id:int, category:str, budged:float = 0):
-    """Adds category for the given user"""
-    user_data = get_user(user_id)
+    def add_category(self, user_id:int, name:str, budget:float=0):
+        if not self._userDAO.is_user_exists(user_id):
+            raise RuntimeError(f"The user {user_id} is not registered")
+        
+        if not (self._categoryDAO.get_category_by_user_and_name(name, user_id) is None):
+            raise CategoryAlreadyExistsException(f"Category {name} of user {user_id} already exists!")
+        
+        self._categoryDAO.add_category(Category(None, name, budget, None, None, user_id))
     
-    categories = user_data[CATEGORIES_KEY]
+    def change_budget(self, user_id:int, category_name:str, budget:float):
 
-    if category in categories:
-        raise CategoryAlreadyExistsException(f"Category {category} of user {user_id} already exists!")
-    
-    categories[category] = {
-        BUDGET_KEY: budged,
-        TRANSACTIONS_KEY: []
-    }
+        category = self._categoryDAO.get_category_by_user_and_name(category_name, user_id)
+        if category is None:
+            raise NoSuchCategoryExistsException(f"No category {category_name} for user {user_id}")
+        
+        category.budget = budget
+        self._categoryDAO.update_category(category)
 
-    save_user_data(user_id, user_data)
+
+        
+
 
 def change_budget(user_id:int, category:str, budget:float):
     """Sets the budget for the given category"""
