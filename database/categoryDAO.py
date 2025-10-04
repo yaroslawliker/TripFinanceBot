@@ -25,7 +25,11 @@ class CategoryDAO(GenericDAO):
     def update_category(self, category: Category):
         self._connection.execute(
             "UPDATE categories SET name=?, budget=?, start_date=?, end_date=?, chat_id=? WHERE id=?",
-            (category.name, category.budget, category.start_date, category.end_date, category.chat_id, category.id)
+            (
+                category.name, category.budget, 
+                GenericDAO.date_to_str(category.start_date), GenericDAO.date_to_str(category.end_date), 
+                category.chat_id, category.id
+            )
         )
     
     def get_category_by_user_and_name(self, name: str, chat_id:int):
