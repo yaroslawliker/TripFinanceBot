@@ -1,5 +1,7 @@
 import datetime
 
+from functools import wraps
+
 from entities import User, Category, Expense
 
 from database.daos import UserDAO, CategoryDAO, ExpenseDAO
@@ -55,14 +57,21 @@ class DatabaseService:
         
         return User(user_id)
     
+    def register_user_if_needed(func):
+        """ Decorator to ensure that the user is registered before calling the function """
+        @wraps(func)
+        def wrapper(self, user_id:int, *args, **kwargs):
+            if not self._userDAO.is_exists(user_id):
+                self.register_user(user_id)
+            return func(self, user_id, *args, **kwargs)
+        return wrapper
 
     ###
     ### Category methods
     ###
-    
+
+    @register_user_if_needed
     def add_category(self, user_id:int, name:str, budget:float=0):
-        if not self._userDAO.is_exists(user_id):
-            raise RuntimeError(f"The user {user_id} is not registered")
         
         if not (self._categoryDAO.get_by_user_and_name(name, user_id) is None):
             raise CategoryAlreadyExistsException(user_id, name)
