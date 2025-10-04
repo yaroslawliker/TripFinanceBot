@@ -1,5 +1,5 @@
 from messages import Messages
-import database_service as database
+import database.database_service as database
 from handling._args import extract_args
 
 def handle_add(message, bot):
@@ -18,8 +18,10 @@ def handle_add(message, bot):
             return
         except database.CategoryAlreadyExistsException:
             bot.send_message(message.chat.id, Messages.CATEGORY_ALREADY_EXISTS.format(category))
+            return
     else:
         budget = 0
 
-    bot.send_message(message.chat.id, Messages.ADD_CATEGORY_CREATED.format(category, budget))
     database.add_category(message.chat.id, category, budget)
+
+    bot.send_message(message.chat.id, Messages.ADD_CATEGORY_CREATED.format(category, budget))
