@@ -81,6 +81,16 @@ class DatabaseService:
         category.start_date = startdate
         category.end_date = enddate
        
+    def get_category(self, user_id:int, category_name:str) -> Category:
+        category = self._categoryDAO.get_by_user_and_name(category_name, user_id)
+        if category is None:
+            raise NoSuchCategoryExistsException(user_id, category_name)
+        
+        return category
+    
+    def get_categories(self, user_id:int) -> list:        
+        return self._categoryDAO.get_all_by_user(user_id)
+    
 
 
 def add_transaction(user_id, category:str, money:float, dt:datetime.datetime=None):
