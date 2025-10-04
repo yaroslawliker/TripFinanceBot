@@ -16,15 +16,15 @@ class TestUserDAO(unittest.TestCase):
         self.conn.execute(CREATE_USERS_QUERY)
     
     def test_is_user_exists__no_user(self):
-        self.assertFalse(self.userDAO.is_user_exists(1234))
+        self.assertFalse(self.userDAO.is_exists(1234))
 
     def test_is_user_exists__after_adding(self):
         id = 5678
         user = User(id)
-        self.userDAO.add_user(user)
+        self.userDAO.add(user)
 
-        self.assertFalse(self.userDAO.is_user_exists(1234))
-        self.assertTrue(self.userDAO.is_user_exists(id))
+        self.assertFalse(self.userDAO.is_exists(1234))
+        self.assertTrue(self.userDAO.is_exists(id))
 
     def tearDown(self):
         self.conn.close()

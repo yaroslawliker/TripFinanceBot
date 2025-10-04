@@ -44,16 +44,16 @@ class DatabaseService:
     ### 
     
     def register_user(self, user_id:int):
-        if self._userDAO.is_user_exists(user_id):
+        if self._userDAO.is_exists(user_id):
             raise RuntimeError(f"The user {user_id} is already registered")
         
-        self._userDAO.add_user(User(user_id))
+        self._userDAO.add(User(user_id))
 
     def is_user_registered(self, user_id:int) -> bool:
-        return self._userDAO.is_user_exists(user_id)
+        return self._userDAO.is_exists(user_id)
     
     def get_user(self, user_id:int) -> User:
-        if not self._userDAO.is_user_exists(user_id):
+        if not self._userDAO.is_exists(user_id):
             self.register_user(user_id)
         
         return User(user_id)
@@ -64,7 +64,7 @@ class DatabaseService:
     ###
     
     def add_category(self, user_id:int, name:str, budget:float=0):
-        if not self._userDAO.is_user_exists(user_id):
+        if not self._userDAO.is_exists(user_id):
             raise RuntimeError(f"The user {user_id} is not registered")
         
         if not (self._categoryDAO.get_by_user_and_name(name, user_id) is None):
