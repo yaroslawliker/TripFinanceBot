@@ -26,6 +26,12 @@ class CategoryDAO(GenericDAO):
             "INSERT INTO categories(name, budget, chat_id) VALUES (?, ?, ?)", 
             (category.name, category.budget, category.chat_id)
         )
+
+    def exists(self, id):
+        """ Returns True if category with given id exists. """
+        cursor = self._connection.execute("SELECT * FROM categories WHERE id = ?", (id,))
+        res = cursor.fetchall()
+        return len(res) != 0
     
     def update(self, category: Category):
         """ Updates the given category using it's id"""
@@ -43,7 +49,7 @@ class CategoryDAO(GenericDAO):
         cursor = self._connection.execute("SELECT * FROM categories WHERE (name = ? AND chat_id = ?)", (name, chat_id))
         row = cursor.fetchone()
         if row == None:
-            return 
+            return None
         else:
             return CategoryDAO._from_row(row)
         
