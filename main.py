@@ -1,9 +1,11 @@
 import telebot
-
+import sqlite3
 
 from read_token import read_token
 
-import database_service as database
+from database.utils import ensure_database_initialized
+from database.daos import UserDAO, CategoryDAO, ExpenseDAO
+from database.database_service import DatabaseService
 from messages import Messages
 
 # Import handlers
@@ -14,9 +16,34 @@ import handling.add
 import handling.left
 import handling.today
 
+
+###
+### Prepare database
+###
+
+### Initialize database connection and ensure database
+_connection = sqlite3.connect("database.db", check_same_thread=False)
+ensure_database_initialized(_connection)
+
+### Initialize DatabaseService
+_userDAO = UserDAO(_connection)
+_categoryDAO = CategoryDAO(_connection)
+_transactionDAO = ExpenseDAO(_connection)
+
+database_service = DatabaseService(_userDAO, _categoryDAO, _transactionDAO)
+
+
+###
+### Initialize bot
+###
+
 TOKEN = read_token()
 
 bot = telebot.TeleBot(TOKEN, parse_mode=None)
+
+###
+### Handlers
+###
 
 @bot.message_handler(commands=["start", "help"])
 def start_handler(message):
@@ -24,7 +51,7 @@ def start_handler(message):
 
 @bot.message_handler(commands=["add"])
 def add_handler(message):
-    handling.add(message, bot)
+    handling.add.handle_add(message, bot, database_service)
     
 @bot.message_handler(commands=["change"])
 def change_handler(message):
