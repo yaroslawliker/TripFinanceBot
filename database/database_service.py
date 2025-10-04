@@ -128,9 +128,9 @@ class DatabaseService:
         
         self._expenseDAO.add(Expense(None, money, dt, purpose, category.id))
 
-    def get_expenses(self, user_id:int, category_name:str) -> list:
-        category = self._categoryDAO.get_by_user_and_name(category_name, user_id)
-        if category is None:
-            raise NoSuchCategoryExistsException(user_id, category_name)
+    def get_expenses(self, category_id:int) -> list:
+
+        if self._categoryDAO.exists(category_id) is None:
+            raise NoSuchCategoryExistsException(id=category_id)
         
-        return self._expenseDAO.get_all_by_category(category.id)
+        return self._expenseDAO.get_all_by_category(category_id)
