@@ -18,7 +18,7 @@ def calculate_total_expenses(expenses):
     return sum
 
 def calculate_totals(categories, database: DatabaseService):
-    """Takes categories dict and returns dict with category names as keys and 'totals' and 'budget' keys"""
+    """Takes categories list and database service as input. Returns list of CategoryExpenseInfoDTO."""
     result = []
     for category in categories:
 

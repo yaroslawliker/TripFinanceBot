@@ -71,7 +71,7 @@ def setdates_handler(message):
 
 @bot.message_handler(commands=["today"])
 def today_handler(message):
-    handling.today.handle_today(message, bot)    
+    handling.today.handle_today(message, bot, database_service)    
 
 
 bot.infinity_polling()

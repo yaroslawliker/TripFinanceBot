@@ -103,6 +103,8 @@ class DatabaseService:
         
         category.start_date = startdate
         category.end_date = enddate
+
+        self._categoryDAO.update(category)
        
     def get_category(self, user_id:int, category_name:str) -> Category:
         category = self._categoryDAO.get_by_user_and_name(category_name, user_id)

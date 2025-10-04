@@ -1,10 +1,11 @@
 import datetime
 
 import handling.left as left
-import database.database_service as database
+from database.database_service import DatabaseService
 from messages import Messages
+from entities import Category, Expense # Needed for type hints during development
 
-def find_today_money(startdate, enddate, today, budget, sum) -> float:
+def find_today_money(startdate, enddate, today, budget, total_expense) -> float:
     
     if today > enddate or today < startdate:
         return None
@@ -16,44 +17,43 @@ def find_today_money(startdate, enddate, today, budget, sum) -> float:
     days_today = delta_today.days + 1
 
     # All the meth
-    today_left = (budget / days_full) * days_today  - sum
+    today_left = (budget / days_full) * days_today  - total_expense
 
     return today_left
 
 
-def handle_today(message, bot):
+def handle_today(message, bot, database: DatabaseService):
 
+    # Check if parameters after /today exists
     if len(message.text) > 6:
         bot.send_message(message.chat.id, Messages.TODAY_WRONG_USAGE)
         return
 
     categories = database.get_categories(message.chat.id)
-    totals = left.calculate_totals(categories)
+    infoDTOs = left.calculate_totals(categories, database)
     
     result = "Today you have:\n"
-    for key in totals:
+    for category, infoDTO in zip(categories, infoDTOs):
+        category: Category
+        infoDTO: left.CategoryExpenseInfoDTO
 
-        # Getting dates from db
-        dates = database.get_dates(message.chat.id, key)
         # Skip if no dates are set up
-        if dates is None:
+        if category.start_date is None:
             continue
 
-        startdate = dates[database.STARTDATE_KEY]
-        enddate = dates[database.ENDDATE_KEY]
+        startdate = category.start_date
+        enddate = category.end_date
         
         today = datetime.datetime.now().date()
 
         # Getting currect category sum and budget
-        total = totals[key]
-        sum = total[left.TOTALS_KEY]
-        budget = total[database.BUDGET_KEY]
+        total_expense = infoDTO.budget - infoDTO.left # Honestly, we have already calculated the opposite in left module, but whatever
 
-        today_left = find_today_money(startdate, enddate, today, budget, sum)
+        today_left = find_today_money(startdate, enddate, today, category.budget, total_expense)
 
         if today_left is None:
-            result += f"{key}: out of period\n"
+            result += f"{category.name}: out of period\n"
         else:       
-            result += f"{key}: {round(today_left, 2)}\n"
+            result += f"{category.name}: {round(today_left, 2)}\n"
 
     bot.send_message(message.chat.id, result)
