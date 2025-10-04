@@ -24,7 +24,7 @@ class ExpenseDAO(GenericDAO):
             (expense.money, expense.datetime, expense.purpose, expense.category_id)
         )
     
-    def get_by_category_id(self, category_id: int) -> list:
+    def get_all_by_category(self, category_id: int) -> list:
         expenses = []
 
         result = self._connection.execute(

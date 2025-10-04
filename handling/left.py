@@ -1,37 +1,52 @@
-import database.database_service as database
+from database.database_service import DatabaseService
 from messages import Messages
+from entities import Category, Expense # Needed for type hints during development
 
 TOTALS_KEY = "totals"
 
-def calculate_total_spend(category):
-    transactions = category[database.TRANSACTIONS_KEY]
+class CategoryExpenseInfoDTO:
+    def __init__(self, name: str, budget: float, left: float):
+        self.name = name
+        self.budget = budget
+        self.left = left
+
+def calculate_total_expenses(expenses):
+    
     sum = 0
-    for transaction in transactions:
-        sum += transaction[database.MONEY_KEY]
+    for expense in expenses:
+        sum += expense.money
     return sum
 
-def calculate_totals(categories:dict):
+def calculate_totals(categories, database: DatabaseService):
     """Takes categories dict and returns dict with category names as keys and 'totals' and 'budget' keys"""
-    result = {}
-    for key in categories.keys():
-        result[key] = {
-            TOTALS_KEY:calculate_total_spend(categories[key]),
-            database.BUDGET_KEY: categories[key][database.BUDGET_KEY]
-        }
+    result = []
+    for category in categories:
+
+        expenses = database.get_expenses(category.id)
+        total_expense = calculate_total_expenses(expenses)
+
+        left = category.budget - total_expense
+
+        result.append(CategoryExpenseInfoDTO(category.name, category.budget, left))
+        
     return result
 
-def get_fromatted_stats(message, bot):
+def handle_left(message, bot, database: DatabaseService):
 
     categories = database.get_categories(message.chat.id)
     
-    sums = calculate_totals(categories)
+    infoDTOs = calculate_totals(categories, database)
     
     result = Messages.STATS_MONEY_LEFT
-    for key in sums:
-        stats = sums[key]
-        budget = stats[database.BUDGET_KEY]
-        left = budget - stats[TOTALS_KEY]
-        result += "{0}:  {1} / {2}\n".format(key, round(left, 2), round(budget,2))
+
+    for infoDTO in infoDTOs:
+        infoDTO: CategoryExpenseInfoDTO
+        
+        result += "{0}:  {1} / {2}\n".format(
+            infoDTO.name, 
+            round(infoDTO.left, 2), 
+            round(infoDTO.budget,2)
+        )
 
     bot.send_message(message.chat.id, result)
 
