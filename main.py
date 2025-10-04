@@ -59,7 +59,7 @@ def change_handler(message):
 
 @bot.message_handler(commands=["spend"])
 def spend_handler(message):
-    handling.spend.handle_spend(message, bot)
+    handling.spend.handle_spend(message, bot, database_service)
 
 @bot.message_handler(commands=["left"])
 def left_handler(message):
