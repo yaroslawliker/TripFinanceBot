@@ -17,10 +17,15 @@ class CategoryAlreadyExistsException(KeyError):
         super().__init__(f"Category {category} of user {user_id} already exists!")
 
 class NoSuchCategoryExistsException(KeyError):
-    def __init__(self, user_id:int, category:str):
+    def __init__(self, user_id:int=None, category:str=None, id:int=None):
         self.category = category
         self.user_id = user_id
-        super().__init__(f"No such category {category} for user {user_id}")
+        self.id = id
+        
+        if id is not None:
+            super().__init__(f"No such category with id {id}")
+        else:
+            super().__init__(f"No such category {category} for user {user_id}")
 
 class StartDaysNotBeforeEndDateException(ValueError):
     def __init__(self, startdate:datetime.date, enddate:datetime.date):
