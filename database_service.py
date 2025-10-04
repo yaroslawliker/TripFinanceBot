@@ -80,28 +80,8 @@ class DatabaseService:
         
         category.start_date = startdate
         category.end_date = enddate
-        
+       
 
-
-        
-        
-
-
-        
-
-
-def change_budget(user_id:int, category:str, budget:float):
-    """Sets the budget for the given category"""
-    user_data = get_user(user_id)
-
-    categories = user_data[CATEGORIES_KEY]
-
-    if category not in categories:
-        raise NoSuchCategoryExistsException(f"No category {category} for user {user_id}")
-    
-    categories[category][BUDGET_KEY] = budget
-
-    save_user_data(user_id, user_data)
 
 def add_transaction(user_id, category:str, money:float, dt:datetime.datetime=None):
     """Adds transaction (spending) to the given category"""
