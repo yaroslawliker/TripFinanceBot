@@ -55,7 +55,7 @@ def add_handler(message):
     
 @bot.message_handler(commands=["change"])
 def change_handler(message):
-    handling.change.handle_change(message, bot)
+    handling.change.handle_change(message, bot, database_service)
 
 @bot.message_handler(commands=["spend"])
 def spend_handler(message):
