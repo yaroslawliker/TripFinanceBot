@@ -36,9 +36,7 @@ def spend_handler(message):
 
 @bot.message_handler(commands=["left"])
 def left_handler(message):
-    categories = database.get_categories(message.chat.id)
-    result = handling.left.get_fromatted_stats(categories)
-    bot.send_message(message.chat.id, result)
+    handling.left.get_fromatted_stats(message, bot)
 
 @bot.message_handler(commands=["setdates"])
 def setdates_handler(message):

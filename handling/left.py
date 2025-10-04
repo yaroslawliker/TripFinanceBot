@@ -20,7 +20,9 @@ def calculate_totals(categories:dict):
         }
     return result
 
-def get_fromatted_stats(categories):
+def get_fromatted_stats(message, bot):
+
+    categories = database.get_categories(message.chat.id)
     
     sums = calculate_totals(categories)
     
@@ -31,7 +33,7 @@ def get_fromatted_stats(categories):
         left = budget - stats[TOTALS_KEY]
         result += "{0}:  {1} / {2}\n".format(key, round(left, 2), round(budget,2))
 
-    return result
+    bot.send_message(message.chat.id, result)
 
 
 
