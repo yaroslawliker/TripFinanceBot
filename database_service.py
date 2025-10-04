@@ -67,7 +67,24 @@ class DatabaseService:
             raise NoSuchCategoryExistsException(user_id, category_name)
         
         category.budget = budget
-        self._categoryDAO.update_category(category)
+        self._categoryDAO.update(category)
+    
+    def set_dates(self, user_id:int, category_name:str, startdate: datetime.date, enddate: datetime.date):
+
+        category = self._categoryDAO.get_by_user_and_name(category_name, user_id)
+        if category is None:
+            raise NoSuchCategoryExistsException(user_id, category_name)
+        
+        if (startdate >= enddate):
+            raise StartDaysNotBeforeEndDateException(startdate, enddate)
+        
+        category.start_date = startdate
+        category.end_date = enddate
+        
+
+
+        
+        
 
 
         
@@ -112,23 +129,6 @@ def add_transaction(user_id, category:str, money:float, dt:datetime.datetime=Non
 def get_categories(user_id):
     user_data = get_user(user_id)
     return user_data[CATEGORIES_KEY]
-
-def set_dates(user_id, category:str, startdate: datetime.date, enddate: datetime.date):
-    assert isinstance(startdate, datetime.date) and isinstance(enddate, datetime.date) and isinstance(category, str)
-
-    if (startdate >= enddate):
-        raise StartDaysNotBeforeEndDateException(f"Startdate {enddate} is not after enddate {startdate}.")
-
-    user_data = get_user(user_id)
-
-    categories = user_data[CATEGORIES_KEY]
-    if category not in categories:
-        raise NoSuchCategoryExistsException(f"No category {category} for user {user_id}.")
-    
-    categories[category][STARTDATE_KEY] = startdate.strftime(DATE_FORMAT)
-    categories[category][ENDDATE_KEY] = enddate.strftime(DATE_FORMAT)
-    
-    save_user_data(user_id, user_data)
 
 def get_dates(user_id, category:str):
     assert isinstance(category, str)
