@@ -19,7 +19,7 @@ class TestUserDAO(unittest.TestCase):
         row = [1234, "Cool category", 300, "2025-09-29", "2026-10-13", 5678]
         expected = Category(1234, "Cool category", 300, datetime.date(2025, 9, 29), datetime.date(2026, 10, 13), 5678)
 
-        result = CategoryDAO._category_from_row(row)
+        result = CategoryDAO._from_row(row)
 
         self.assertEqual(expected.id, result.id)
         self.assertEqual(expected.name, result.name)
@@ -32,7 +32,7 @@ class TestUserDAO(unittest.TestCase):
         row = [1234, "Cool category", 300, None, None, 5678]
         expected = Category(1234, "Cool category", 300, None, None, 5678)
 
-        result = CategoryDAO._category_from_row(row)
+        result = CategoryDAO._from_row(row)
 
         self.assertEqual(expected.id, result.id)
         self.assertEqual(expected.name, result.name)
@@ -43,7 +43,7 @@ class TestUserDAO(unittest.TestCase):
 
     def test_add_category(self):
         category = Category(None, "New category", 400, None, None, 1234)
-        self.categoryDAO.add_category(category)
+        self.categoryDAO.add(category)
 
         cursor = self.conn.execute("SELECT * FROM categories WHERE name = ?", (category.name,))
         row = cursor.fetchone()
@@ -54,7 +54,7 @@ class TestUserDAO(unittest.TestCase):
         self.assertEqual(row[5], category.chat_id)
     
     def test_get_all_categories_of_user__no_categories(self):
-        result = self.categoryDAO.get_all_categories_of_user(1234)
+        result = self.categoryDAO.get_all_by_user(1234)
         expected = []
 
         self.assertEqual(expected, result)
@@ -67,9 +67,9 @@ class TestUserDAO(unittest.TestCase):
         ]
 
         for category in categories:
-            self.categoryDAO.add_category(category)
+            self.categoryDAO.add(category)
         
-        result = self.categoryDAO.get_all_categories_of_user(1234)
+        result = self.categoryDAO.get_all_by_user(1234)
         expected = [
             Category(1, "Category 1", 100, None, None, 1234),
             Category(2, "Category 2", 200, None, None, 1234)
@@ -85,14 +85,14 @@ class TestUserDAO(unittest.TestCase):
             self.assertEqual(expected[i].chat_id, result[i].chat_id)
 
     def test_get_category_by_user_and_name__no_category(self):
-        result = self.categoryDAO.get_category_by_user_and_name("Nonexistent", 1234)
+        result = self.categoryDAO.get_by_user_and_name("Nonexistent", 1234)
         self.assertIsNone(result)
     
     def test_get_category_by_user_and_name__exists(self):
         category = Category(None, "Category 1", 100, None, None, 1234)
-        self.categoryDAO.add_category(category)
+        self.categoryDAO.add(category)
 
-        result = self.categoryDAO.get_category_by_user_and_name("Category 1", 1234)
+        result = self.categoryDAO.get_by_user_and_name("Category 1", 1234)
         expected = Category(1, "Category 1", 100, None, None, 1234)
 
         self.assertIsNotNone(result)
@@ -105,10 +105,10 @@ class TestUserDAO(unittest.TestCase):
     
     def test_update_category(self):
         category = Category(None, "Category 1", 100, None, None, 1234)
-        self.categoryDAO.add_category(category)
+        self.categoryDAO.add(category)
 
         category_to_update = Category(1, "Updated Category", 500, datetime.date(2025, 10, 1), datetime.date(2025, 12, 31), 1234)
-        self.categoryDAO.update_category(category_to_update)
+        self.categoryDAO.update(category_to_update)
 
         cursor = self.conn.execute("SELECT * FROM categories WHERE id = ?", (1,))
         row = cursor.fetchone()

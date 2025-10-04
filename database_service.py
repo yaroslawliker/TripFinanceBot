@@ -8,13 +8,22 @@ from database.expenseDAO import ExpenseDAO
 
 
 class CategoryAlreadyExistsException(KeyError):
-    pass
+    def __init__(self, user_id:int, category:str):
+        self.user_id = user_id
+        self.category = category
+        super().__init__(f"Category {category} of user {user_id} already exists!")
 
 class NoSuchCategoryExistsException(KeyError):
-    pass
+    def __init__(self, user_id:int, category:str):
+        self.category = category
+        self.user_id = user_id
+        super().__init__(f"No such category {category} for user {user_id}")
 
 class StartDaysNotBeforeEndDateException(ValueError):
-    pass
+    def __init__(self, startdate:datetime.date, enddate:datetime.date):
+        self.startdate = startdate
+        self.enddate = enddate
+        super().__init__(f"Startdate {startdate} is not before enddate {enddate}")
 
 ###
 ### Common methods
@@ -46,16 +55,16 @@ class DatabaseService:
         if not self._userDAO.is_user_exists(user_id):
             raise RuntimeError(f"The user {user_id} is not registered")
         
-        if not (self._categoryDAO.get_category_by_user_and_name(name, user_id) is None):
-            raise CategoryAlreadyExistsException(f"Category {name} of user {user_id} already exists!")
+        if not (self._categoryDAO.get_by_user_and_name(name, user_id) is None):
+            raise CategoryAlreadyExistsException(user_id, name)
         
-        self._categoryDAO.add_category(Category(None, name, budget, None, None, user_id))
+        self._categoryDAO.add(Category(None, name, budget, None, None, user_id))
     
     def change_budget(self, user_id:int, category_name:str, budget:float):
 
-        category = self._categoryDAO.get_category_by_user_and_name(category_name, user_id)
+        category = self._categoryDAO.get_by_user_and_name(category_name, user_id)
         if category is None:
-            raise NoSuchCategoryExistsException(f"No category {category_name} for user {user_id}")
+            raise NoSuchCategoryExistsException(user_id, category_name)
         
         category.budget = budget
         self._categoryDAO.update_category(category)

@@ -5,7 +5,8 @@ from database.genericDAO import GenericDAO
 
 class CategoryDAO(GenericDAO):
 
-    def _category_from_row(row):
+    def _from_row(row):
+        """ Creates Category object from the given row from a database."""
         
         id = row[0]
         name = row[1]
@@ -16,13 +17,18 @@ class CategoryDAO(GenericDAO):
 
         return Category(id, name, budget, start_date, end_date, user_id)
 
-    def add_category(self, category: Category):
+    def add(self, category: Category):
+        """
+        Adds a new category from the given. 
+        The id field is ignored, new id is stored in the database 
+        """
         self._connection.execute(
             "INSERT INTO categories(name, budget, chat_id) VALUES (?, ?, ?)", 
             (category.name, category.budget, category.chat_id)
         )
     
-    def update_category(self, category: Category):
+    def update(self, category: Category):
+        """ Updates the given category using it's id"""
         self._connection.execute(
             "UPDATE categories SET name=?, budget=?, start_date=?, end_date=?, chat_id=? WHERE id=?",
             (
@@ -32,22 +38,24 @@ class CategoryDAO(GenericDAO):
             )
         )
     
-    def get_category_by_user_and_name(self, name: str, chat_id:int):
+    def get_by_user_and_name(self, name: str, chat_id:int):
+        """ Reutrns Category of given name and user, or None if not found """
         cursor = self._connection.execute("SELECT * FROM categories WHERE (name = ? AND chat_id = ?)", (name, chat_id))
         row = cursor.fetchone()
         if row == None:
             return 
         else:
-            return CategoryDAO._category_from_row(row)
+            return CategoryDAO._from_row(row)
         
     
-    def get_all_categories_of_user(self, chat_id:int) -> list:
+    def get_all_by_user(self, chat_id:int) -> list:
+        """ Returns all categories of given user"""
         categories = []
 
         result = self._connection.execute("SELECT * FROM categories WHERE chat_id = ?", (chat_id,)).fetchall()
 
         for row in result:
-            categories.append(CategoryDAO._category_from_row(row))
+            categories.append(CategoryDAO._from_row(row))
 
         return categories
 
