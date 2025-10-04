@@ -67,7 +67,7 @@ def left_handler(message):
 
 @bot.message_handler(commands=["setdates"])
 def setdates_handler(message):
-    handling.set_dates.handle_set_dates(message, bot)
+    handling.set_dates.handle_set_dates(message, bot, database_service)
 
 @bot.message_handler(commands=["today"])
 def today_handler(message):
