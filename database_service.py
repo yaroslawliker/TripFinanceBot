@@ -108,56 +108,18 @@ class DatabaseService:
     ### Expense methods
     ###
 
-    
-
-def add_transaction(user_id, category:str, money:float, dt:datetime.datetime=None):
-    """Adds transaction (spending) to the given category"""
-    user_data = get_user(user_id)
-
-    assert isinstance(money, float)
-
-    categories = user_data[CATEGORIES_KEY]
-
-    if category not in categories:
-        raise NoSuchCategoryExistsException(f"No category {category} for user {user_id}")
-    
-    if (dt is None):
+    def add_expense(self, user_id:int, category_name:str, money:float, purpose:str):
+        category = self._categoryDAO.get_by_user_and_name(category_name, user_id)
+        if category is None:
+            raise NoSuchCategoryExistsException(user_id, category_name)
+        
         dt = datetime.datetime.now()
+        
+        self._expenseDAO.add(Expense(None, money, dt, purpose, category.id))
 
-    transaction = {
-        MONEY_KEY:money,
-        DATETIME_KEY:str(dt)
-    }
-    
-    categories[category][TRANSACTIONS_KEY].append(transaction)
-
-    save_user_data(user_id, user_data)
-
-def get_categories(user_id):
-    user_data = get_user(user_id)
-    return user_data[CATEGORIES_KEY]
-
-def get_dates(user_id, category:str):
-    assert isinstance(category, str)
-
-    user_data = get_user(user_id)
-
-    categories = user_data[CATEGORIES_KEY]
-    if category not in categories:
-        raise NoSuchCategoryExistsException(f"No category {category} for user {user_id}")
-    
-    # Checks if the time had been added
-    if (STARTDATE_KEY not in categories[category]):
-        return None
-    
-    startstr = categories[category][STARTDATE_KEY]
-    endstr = categories[category][ENDDATE_KEY]
-
-    startdate = datetime.datetime.strptime(startstr, DATE_FORMAT).date()
-    enddate = datetime.datetime.strptime(endstr, DATE_FORMAT).date()
-    
-    return {
-        STARTDATE_KEY: startdate,
-        ENDDATE_KEY: enddate
-    }
-    
+    def get_expenses(self, user_id:int, category_name:str) -> list:
+        category = self._categoryDAO.get_by_user_and_name(category_name, user_id)
+        if category is None:
+            raise NoSuchCategoryExistsException(user_id, category_name)
+        
+        return self._expenseDAO.get_all_by_category(category.id)
