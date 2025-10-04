@@ -1,4 +1,4 @@
-from database.genericDAO import GenericDAO
+from database.daos.genericDAO import GenericDAO
 from entities import Expense
 
 
