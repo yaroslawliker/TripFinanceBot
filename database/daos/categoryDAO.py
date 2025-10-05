@@ -23,8 +23,8 @@ class CategoryDAO(GenericDAO):
         The id field is ignored, new id is stored in the database 
         """
         self._connection.execute(
-            "INSERT INTO categories(name, budget, chat_id) VALUES (?, ?, ?)", 
-            (category.name, category.budget, category.chat_id)
+            "INSERT INTO categories(name, budget, start_date, end_date, chat_id) VALUES (?, ?, ?, ?, ?)", 
+            (category.name, category.budget, category.start_date, category.end_date, category.chat_id)
         )
 
     def exists(self, id):
