@@ -22,7 +22,7 @@ import handling.today
 ###
 
 ### Initialize database connection and ensure database
-_connection = sqlite3.connect("database.db", check_same_thread=False)
+_connection = sqlite3.connect("database.db", check_same_thread=False, isolation_level=None)
 ensure_database_initialized(_connection)
 
 ### Initialize DatabaseService
