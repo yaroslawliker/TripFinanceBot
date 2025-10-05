@@ -3,7 +3,7 @@ import sqlite3
 
 from read_token import read_token
 
-from database.utils import ensure_database_initialized
+from database.initialize_database import ensure_database_initialized
 from database.daos import UserDAO, CategoryDAO, ExpenseDAO
 from database.database_service import DatabaseService
 from messages import Messages
