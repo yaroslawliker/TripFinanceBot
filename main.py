@@ -6,6 +6,7 @@ from read_token import read_token
 from database.initialize_database import ensure_database_initialized
 from database.daos import UserDAO, CategoryDAO, ExpenseDAO
 from database.database_service import DatabaseService
+from logic.category_expense_calculator import CategoryExpenseCalculator
 from messages import Messages
 
 # Import handlers
@@ -21,17 +22,22 @@ import handling.today
 ### Prepare database
 ###
 
-### Initialize database connection and ensure database
 _connection = sqlite3.connect("database.db", check_same_thread=False, isolation_level=None)
 ensure_database_initialized(_connection)
 
-### Initialize DatabaseService
+###
+### Perform Dependency Injection
+###
+
+# Initialize DatabaseService
 _userDAO = UserDAO(_connection)
 _categoryDAO = CategoryDAO(_connection)
 _transactionDAO = ExpenseDAO(_connection)
 
 database_service = DatabaseService(_userDAO, _categoryDAO, _transactionDAO)
 
+# Initialize ExpenseCalculator
+expense_calculator = CategoryExpenseCalculator(database_service)
 
 ###
 ### Initialize bot
@@ -63,7 +69,7 @@ def spend_handler(message):
 
 @bot.message_handler(commands=["left"])
 def left_handler(message):
-    handling.left.handle_left(message, bot, database_service)
+    handling.left.handle_left(message, bot, expense_calculator)
 
 @bot.message_handler(commands=["setdates"])
 def setdates_handler(message):
@@ -71,7 +77,7 @@ def setdates_handler(message):
 
 @bot.message_handler(commands=["today"])
 def today_handler(message):
-    handling.today.handle_today(message, bot, database_service)    
+    handling.today.handle_today(message, bot, database_service, expense_calculator)    
 
 
 bot.infinity_polling()

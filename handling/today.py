@@ -1,7 +1,7 @@
 import datetime
 
-import handling.left as left
 from database.database_service import DatabaseService
+from logic.category_expense_calculator import CategoryExpenseCalculator, CategoryExpenseInfoDTO
 from messages import Messages
 from entities import Category, Expense # Needed for type hints during development
 
@@ -22,7 +22,7 @@ def find_today_money(startdate, enddate, today, budget, total_expense) -> float:
     return today_left
 
 
-def handle_today(message, bot, database: DatabaseService):
+def handle_today(message, bot, database: DatabaseService, expense_calculator: CategoryExpenseCalculator):
 
     # Check if parameters after /today exists
     if len(message.text) > 6:
@@ -30,12 +30,12 @@ def handle_today(message, bot, database: DatabaseService):
         return
 
     categories = database.get_categories(message.chat.id)
-    infoDTOs = left.calculate_totals(categories, database)
+    infoDTOs = expense_calculator.calculate_categories_expenses(message.chat.id)
     
     result = "Today you have:\n"
     for category, infoDTO in zip(categories, infoDTOs):
         category: Category
-        infoDTO: left.CategoryExpenseInfoDTO
+        infoDTO: CategoryExpenseInfoDTO
 
         # Skip if no dates are set up
         if category.start_date is None:
@@ -46,10 +46,7 @@ def handle_today(message, bot, database: DatabaseService):
         
         today = datetime.datetime.now().date()
 
-        # Getting currect category sum and budget
-        total_expense = infoDTO.budget - infoDTO.left # Honestly, we have already calculated the opposite in left module, but whatever
-
-        today_left = find_today_money(startdate, enddate, today, category.budget, total_expense)
+        today_left = find_today_money(startdate, enddate, today, category.budget, infoDTO.spent)
 
         if today_left is None:
             result += f"{category.name}: out of period\n"
