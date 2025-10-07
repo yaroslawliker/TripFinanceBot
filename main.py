@@ -16,6 +16,7 @@ import handling.spend
 import handling.add
 import handling.left
 import handling.today
+import handling.week
 
 
 ###
@@ -78,6 +79,11 @@ def setdates_handler(message):
 @bot.message_handler(commands=["today"])
 def today_handler(message):
     handling.today.handle_today(message, bot, database_service, expense_calculator)    
+
+@bot.message_handler(commands=["week"])
+def week_handler(message):
+    handling.week.handle_week(message, bot, database_service, expense_calculator)
+
 
 
 bot.infinity_polling()
