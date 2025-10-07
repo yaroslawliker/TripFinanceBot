@@ -5,9 +5,10 @@ from entities import Category, Expense # Needed for type hints during developmen
 
 TOTALS_KEY = "totals"
 
-def handle_left(message, bot, expense_calculator: CategoryExpenseCalculator):
+def handle_left(message, bot, database: DatabaseService,  expense_calculator: CategoryExpenseCalculator):
    
-    infoDTOs = expense_calculator.calculate_categories_expenses(message.chat.id)
+    categories = database.get_categories(message.chat.id)
+    infoDTOs = expense_calculator.calculate_categories_expenses(categories)
     
     result = Messages.STATS_MONEY_LEFT
 

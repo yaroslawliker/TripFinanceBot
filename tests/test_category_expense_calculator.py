@@ -24,19 +24,19 @@ class TestCategoryExpenseCalculator(unittest.TestCase):
 
     def test_calculate_categories_expenses(self):
         # Arrange
-        mock_categories = [
+        categories = [
             Category(id=1, name="Food", budget=200, start_date=None, end_date=None, user_id=1),
             Category(id=2, name="Transport", budget=150, start_date=None, end_date=None, user_id=1)
         ]
         
-        self.mock_database.get_categories.return_value = mock_categories
+        self.mock_database.get_categories.return_value = categories
         self.mock_database.get_expenses.side_effect = [
             [MagicMock(money=50), MagicMock(money=30)],  # Expenses for category 1
             [MagicMock(money=40)]  # Expenses for category 2
         ]
 
         # Act
-        result = self.calculator.calculate_categories_expenses(1)
+        result = self.calculator.calculate_categories_expenses(categories)
 
         # Assert
         self.assertEqual(len(result), 2)

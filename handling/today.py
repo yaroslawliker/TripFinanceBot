@@ -30,7 +30,7 @@ def handle_today(message, bot, database: DatabaseService, expense_calculator: Ca
         return
 
     categories = database.get_categories(message.chat.id)
-    infoDTOs = expense_calculator.calculate_categories_expenses(message.chat.id)
+    infoDTOs = expense_calculator.calculate_categories_expenses(categories)
     
     result = "Today you have:\n"
     for category, infoDTO in zip(categories, infoDTOs):

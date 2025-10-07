@@ -69,7 +69,7 @@ def spend_handler(message):
 
 @bot.message_handler(commands=["left"])
 def left_handler(message):
-    handling.left.handle_left(message, bot, expense_calculator)
+    handling.left.handle_left(message, bot, database_service, expense_calculator)
 
 @bot.message_handler(commands=["setdates"])
 def setdates_handler(message):

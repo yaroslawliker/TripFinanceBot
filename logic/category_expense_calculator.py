@@ -26,9 +26,8 @@ class CategoryExpenseCalculator:
             sum += expense.money
         return sum
 
-    def calculate_categories_expenses(self, user_id):
-        """Takes user_id as input. Returns list of CategoryExpenseInfoDTO of the given user."""
-        categories = self._database.get_categories(user_id)
+    def calculate_categories_expenses(self, categories):
+        """Takes categoris as input. Returns list of CategoryExpenseInfoDTO of the given user."""
         result = []
         for category in categories:
 
