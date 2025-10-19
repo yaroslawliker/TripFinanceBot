@@ -31,7 +31,7 @@ You can `/spend` some money in a category, e.g: `/spend food 7.5`.
 You can then check how much is `/left` of every category.
 
 You can add time limits to the categories with `/setdates`, e.g: `/setdates transfer 10.01.2025 17.02.2025`.
-This will allow you to use commands ass:
+This will allow you to use commands:
 * `/today` - see how much money have left for today (if we spread the whole amout to all days equally).
 * `/week` - see how much money have left to the week.
 
