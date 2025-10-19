@@ -1,5 +1,5 @@
 # Intro
-This is a Telegram bot for managing finances during trip, or just plitting the whole budget to categories.
+This is a Telegram bot for managing finances during trip, or just splitting the whole budget to categories.
 
 # Motivation
 This is a pet project, made to help me personally manage my finices. All business logic is dictated by every-day calculations I have been performing manualy.
