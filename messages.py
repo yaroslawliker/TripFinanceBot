@@ -29,3 +29,8 @@ class Messages():
     SET_DATES_EXAMPLE = "Wrong usage. Example:\n/setdates Transfer 10.01.2024 17.01.2024"
 
     TODAY_WRONG_USAGE = "Wrong usage. Just write '/today'"
+
+    SPENDS_WRONG_USAGE = "Wrong usage. Correct example:\n/spends Transfer"
+    SPENDS_HEADER = "Spend data for {0}"
+    SPENDS_EMPTY = "No spends yet. You can write down them with /spend command."
+    SPENDS_TABLE_COLUMNS = "ID. money date{0} time purpose"
