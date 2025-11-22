@@ -86,5 +86,5 @@ def week_handler(message):
 
 
 
-bot.infinity_polling()
+bot.infinity_polling(timeout=3, long_polling_timeout=3)
 
