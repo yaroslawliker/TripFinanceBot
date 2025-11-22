@@ -10,9 +10,11 @@ def handle_spends(message, bot, database: DatabaseService):
         # Extracting arguments
         arguments = extract_args(message.text)
         category = arguments[0]
+        
+        print(arguments)
 
-        if len(category) > 1:
-            raise ValueError(f"Message have to much arguments, one expected, got {len(category)}.")
+        if len(arguments) > 1:
+            raise ValueError(f"Message have to much arguments, one expected, got {len(arguments)}.")
     
         # Getting model
         expenses = get_expenses(message.chat.id, category, database)
