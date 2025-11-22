@@ -17,6 +17,7 @@ import handling.add
 import handling.left
 import handling.today
 import handling.week
+import handling.spends
 
 
 ###
@@ -56,6 +57,10 @@ bot = telebot.TeleBot(TOKEN, parse_mode=None)
 def start_handler(message):
     bot.send_message(message.chat.id, Messages.HELP)
 
+@bot.message_handler(commands=["superhelp"])
+def start_handler(message):
+    bot.send_message(message.chat.id, Messages.SUPERHELP, parse_mode="HTML")
+
 @bot.message_handler(commands=["add"])
 def add_handler(message):
     handling.add.handle_add(message, bot, database_service)
@@ -84,6 +89,9 @@ def today_handler(message):
 def week_handler(message):
     handling.week.handle_week(message, bot, database_service, expense_calculator)
 
+@bot.message_handler(commands=["spends"])
+def week_handler(message):
+    handling.spends.handle_spends(message, bot, database_service)
 
 
 bot.infinity_polling(timeout=3, long_polling_timeout=3)
