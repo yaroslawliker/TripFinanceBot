@@ -34,9 +34,9 @@ def handle_spends(message, bot, database: DatabaseService):
 ### Model function
 ###
 
-def get_expenses(user_id: int, category: str, database: DatabaseService):
-        category_id = database.get_category(user_id, category)
-        return database.get_expenses(category_id)
+def get_expenses(user_id: int, category_name: str, database: DatabaseService):
+    category = database.get_category(user_id, category_name)
+    return database.get_expenses(category.id)
 
 ###
 ### View functions
