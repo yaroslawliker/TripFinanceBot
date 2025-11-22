@@ -31,6 +31,7 @@ class Messages():
     TODAY_WRONG_USAGE = "Wrong usage. Just write '/today'"
 
     SPENDS_WRONG_USAGE = "Wrong usage. Correct example:\n/spends Transfer"
-    SPENDS_HEADER = "Spend data for {0}"
+    SPENDS_HEADER = "Spends list for '{0}'"
     SPENDS_EMPTY = "No spends yet. You can write down them with /spend command."
-    SPENDS_TABLE_COLUMNS = "ID. money date{0} time purpose"
+    SPENDS_YEAR = "All dates are within {0} year"
+    SPENDS_TABLE_COLUMNS = "ID.  money  |  date time  |  purpose"
