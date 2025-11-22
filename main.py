@@ -57,6 +57,10 @@ bot = telebot.TeleBot(TOKEN, parse_mode=None)
 def start_handler(message):
     bot.send_message(message.chat.id, Messages.HELP)
 
+@bot.message_handler(commands=["superhelp"])
+def start_handler(message):
+    bot.send_message(message.chat.id, Messages.SUPERHELP, parse_mode="HTML")
+
 @bot.message_handler(commands=["add"])
 def add_handler(message):
     handling.add.handle_add(message, bot, database_service)

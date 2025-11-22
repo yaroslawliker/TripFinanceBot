@@ -19,6 +19,41 @@ Smart money monitoring
 /superhelp - more detailed explanation
 """
 
+    SUPERHELP = """<b>Superhelp</b>
+This is a bot for splitting money on budgets, keeping track of spends and spread money across periods.
+
+<b>Main commands:</b>
+/add &lt;category&gt; &lt;~budget&gt; - add spending category with the given budget. If budget is not written, it is set to 0
+Categories are needed to devide different spends: for example in a trip as an example you may have this categories: Transfer, Hotels, Food, EntryTickets ect.
+
+/change &lt;category&gt; &lt;amount&gt; - change the budget of the category
+/spend &lt;category&gt; &lt;amount&gt; - spend money in the category.
+You will later be able to see your spend list and statistics.
+
+/spends &lt;category&gt; - check the list of spends in the category in the table format: ID. money | date time | purpose (if persent)
+If all spends have the same year, the year is ommited.
+
+/left - check how much money left of every category
+For each category: left = budget - sum(spends)
+
+<b>Smart money monitoring</b>
+/setdates &lt;category&gt; &lt;start date&gt; &lt;end date&gt; - set the date borders of your category
+The date format should be dd.mm.yyyy, for example 29.12.2025.
+
+/today - check the money, apportioned for today.
+To use this command you first have to /setdates of your category.
+This commands helps check how much money you have, if the budged were devided for the period, set with /setdates.
+In other words, if your today`s balance is positive, this means you may spend this amount today, and you are keeping with the budged.\
+If your today`s budget is negative, probably, you have spent too much.
+For each category: today = budget/period*thisDayNum - sum(spends), where
+- period is number of days from start-date to end-date
+- thisDayNum is the number of the day, counting from the period`s start-date till and including today.
+
+/week - check the money, approtioned for this week, in the simmilar way as /today.
+It accounts that the first or the last weeks of the periods may be less then 7 days.
+Intuitively, your week`s balance, is how much you can spend till the end of this week to keep yourself within the budget.
+"""
+
     ADD_ARGUMENT_ERROR = "Wrong usage. Correct example:\n/add Transfer 150"
     ADD_CATEGORY_CREATED = "Category '{0}' created with budget {1}"
     CATEGORY_ALREADY_EXISTS = "Category '{0}' already exists."
