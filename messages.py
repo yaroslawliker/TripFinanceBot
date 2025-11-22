@@ -4,10 +4,19 @@ class Messages():
     """Class contains all text messages"""
 
     HELP = """This is a bot for managing money in travel.
+Main commands:
 /add <category> - add spending category
-/change <category> <amount> - change the budget of the category\n
-/spend <category> <amount> - spend money to the category
+/change <category> <amount> - change the budget of the category
+/spend <category> <amount> - spend money in the category
+/spends <category> - check the list of spends in the category
 /left - check how much money left of every category
+
+Smart money monitoring
+/setdates <category> <start date> <end date> - set the date borders of your category
+/today - check the money, apportioned for today
+/week - check the money, approtioned for this week
+
+/superhelp - more detailed explanation
 """
 
     ADD_ARGUMENT_ERROR = "Wrong usage. Correct example:\n/add Transfer 150"
