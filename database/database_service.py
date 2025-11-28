@@ -33,6 +33,9 @@ class StartDaysNotBeforeEndDateException(ValueError):
         self.enddate = enddate
         super().__init__(f"Startdate {startdate} is not before enddate {enddate}")
 
+class ExpenseIsNotInTheCategory(Exception):
+    pass
+
 
 ### Database service class
 class DatabaseService:
@@ -136,3 +139,8 @@ class DatabaseService:
             raise NoSuchCategoryExistsException(id=category_id)
         
         return self._expenseDAO.get_all_by_category(category_id)
+    
+    def delete_expense_if_in_category(self, expense_id, category_id):
+        if not self._expenseDAO.exists_in_category(expense_id, category_id):
+            raise ExpenseIsNotInTheCategory(f"No expense '{expense_id}' in categroy '{category_id}'")
+        self._expenseDAO.delete(expense_id)

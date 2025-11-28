@@ -13,6 +13,7 @@ from messages import Messages
 import handling.change
 import handling.set_dates
 import handling.spend
+import handling.cancel_spend
 import handling.add
 import handling.left
 import handling.today
@@ -73,6 +74,10 @@ def change_handler(message):
 @bot.message_handler(commands=["spend"])
 def spend_handler(message):
     handling.spend.handle_spend(message, bot, database_service)
+
+@bot.message_handler(commands=["cancel_spend"])
+def spend_handler(message):
+    handling.cancel_spend.handle_canes_spend(message, bot, database_service)
 
 @bot.message_handler(commands=["left"])
 def left_handler(message):

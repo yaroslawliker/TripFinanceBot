@@ -8,6 +8,7 @@ Main commands:
 /add <category> - add spending category
 /change <category> <amount> - change the budget of the category
 /spend <category> <amount> - spend money in the category
+/cancel_spend <category> <spend_id> - cancles the spend with the given id
 /spends <category> - check the list of spends in the category
 /left - check how much money left of every category
 
@@ -27,13 +28,16 @@ This is a bot for splitting money on budgets, keeping track of spends and spread
 <b>Main commands:</b>
 /add &lt;category&gt; &lt;~budget&gt; - add spending category with the given budget. If budget is not written, it is set to 0
 Categories are needed to devide different spends: for example in a trip as an example you may have this categories: Transfer, Hotels, Food, EntryTickets ect.
-
 /change &lt;category&gt; &lt;amount&gt; - change the budget of the category
+
 /spend &lt;category&gt; &lt;amount&gt; - spend money in the category.
 You will later be able to see your spend list and statistics.
-
-/spends &lt;category&gt; - check the list of spends in the category in the table format: ID. money | date time | purpose (if persent)
+/cancel_spend &lt;category&gt; &lt;spend_id&gt; - cancles the spend with the given id, if the spend exists in the given category. \
+The ID may be checked using /spends command.
+/spends &lt;category&gt; - check the list of spends in the category in the table format: ID | money | date time | purpose (if persent)
 If all spends have the same year, the year is ommited.
+
+
 
 /left - check how much money left of every category
 For each category: left = budget - sum(spends)
@@ -69,6 +73,10 @@ Intuitively, your week`s balance, is how much you can spend till the end of this
 
     SPEND_ARGUMENT_ERROR = "Wrong usage. Correct example:\n/spend Transfer 7.5"
     SPEND_SUCCESS = "Spent {1} money on {0}."
+
+    CANCEL_SPEND_WRONG_USAGE = "Wrong usage. Check the list of expenses with /spends <category>, choose the ID and try again.\nCorrect example: /cancel_spend Transfer 231"
+    CANCEL_SPEND_NO_SUCH = "There is no the spend '{0}' in the category '{1}'"
+    CANCEL_SPEND_DELETED = "The spend deleted."
 
     STATS_MONEY_LEFT = "Money left:\n"
 

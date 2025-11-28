@@ -24,6 +24,23 @@ class ExpenseDAO(GenericDAO):
             (expense.money, expense.datetime, expense.purpose, expense.category_id)
         )
     
+    def exists(self, expense_id:int):
+        result = self._connection.execute(
+            "SELECT * FROM expenses WHERE id = ?", (expense_id,)
+        ).fetchone()
+        if result is not None:
+            return True
+        else:
+            return False
+
+    def delete(self, expense_id:int):
+        if not self.exists(expense_id):
+            raise ValueError(f"No expense with id '{expense_id}' exists.")
+
+        result = self._connection.execute(
+            "DELETE FROM expenses WHERE id = ?", (expense_id,)
+        )
+    
     def get_all_by_category(self, category_id: int) -> list:
         expenses = []
 
@@ -35,4 +52,13 @@ class ExpenseDAO(GenericDAO):
             expenses.append(ExpenseDAO._from_row(row))
 
         return expenses
+    
+    def exists_in_category(self, expense_id, category_id):
+        result = self._connection.execute(
+            "SELECT * FROM expenses WHERE id = ? and category_id = ?", (expense_id, category_id)
+        ).fetchone()
+        if result is not None:
+            return True
+        else:
+            return False
     
