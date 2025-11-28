@@ -90,7 +90,7 @@ Intuitively, your week`s balance, is how much you can spend till the end of this
     SPENDS_HEADER = "Spends list for '{0}'"
     SPENDS_EMPTY = "No spends yet. You can write down them with /spend command."
     SPENDS_YEAR = "All dates are within {0} year"
-    SPENDS_TABLE_COLUMNS = "ID |  money  |  date time  |  purpose"
+    SPENDS_TABLE_COLUMNS = "ID  |  money  |   date time   |  purpose"
 
     # Statistics
     STATS_WRONG_USAGE = "Wrong usage. Correct example:\n/statistics Transfer"
