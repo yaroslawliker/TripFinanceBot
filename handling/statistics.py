@@ -25,15 +25,21 @@ def handle_statistics(message, bot, database: DatabaseService, expense_calculato
     except:
         pass
 
+
+
 ###
 ### Model & calculation
 ###
+
 
 @dataclass
 class WeekExpensesDTO:
     week_start: datetime
     week_end: datetime
     expenses: list
+
+    def days(self) -> datetime.timedelta:
+        return self.week_end - self.week_start
 
 def get_model(chat_id, category, database: DatabaseService):
     
@@ -49,48 +55,52 @@ def get_model(chat_id, category, database: DatabaseService):
         end_date = expenses[-1].datetime.date()
         category.start_date = start_date
         category.end_date = end_date
-        
-    weeks = split_into_weeks(expenses)
+
+    # Init weeks and split expenses amoung them
+    weeks = init_week_edges(start_date, end_date)      
+    split_into_weeks(expenses, weeks)
 
 
-
-def split_into_weeks(expenses):
-
+def init_week_edges(start_date:datetime.date, end_date: datetime.date):
     weeks = []
-    new_week = []
-    prev_date = expenses[0].datetime.date()
+
+    # Iterating through mondays
+    cur_mon = start_date - datetime.timedelta(days=start_date.weekday())
+    prev_mon = None
+    while(cur_mon <= end_date):
+
+        if prev_mon is not None:
+            cur_mon = prev_mon + datetime.timedelta(days=7)
+
+        cur_end = cur_mon + datetime.timedelta(days=6)
+        week_dto = WeekExpensesDTO(cur_mon, cur_end, [])
+
+        prev_mon = cur_mon
+
+    # Ensuring edges
+    weeks[0].week_start = start_date
+    weeks[-1].week_end = end_date
+
+def split_into_weeks(expenses, weeks) -> None:
+    """Puts expenses into the appropriate weeks"""
+
+    def update_week(date, cur_week:WeekExpensesDTO, weeks):
+        """Updates week"""
+        def is_in_week(date, week):
+            return date >= week.week_start and date <= week.week_end
+        if is_in_week(date, cur_week):
+            return cur_week
+        for week in weeks:
+            if is_in_week(week, cur_week):
+                return week
+
+    week = weeks[0]
     for expense in expenses:
+        week = update_week(expense.datetime.date(), week, weeks)
+        week.expenses.append(expense)
 
-        date = expense.datetime.date()
-
-        # Checking if the week has been changed
-        prev_mon = prev_date - datetime.timedelta(days=prev_date.weekday())
-        this_mon = date    -   datetime.timedelta(days=date.weekday())
-        diff = this_mon - prev_mon
-
-
-
-        # Calculating the end of previous week
-        if diff > datetime.timedelta(days=0):
-            weeks.append(new_week)
-
-            # If a week or few were skipped
-            if (diff > datetime.timedelta(days=8)):
-
-                full_weeks = (diff.days-1) // 7
-                # Adding empty weeks
-                for i in range(full_weeks):
-                    weeks.append([])
-
-            new_week = []
         
-        prev_date = date
-        new_week.append(expense)
 
-    weeks.append(new_week)
-
-    return weeks
-    
         
         
 
