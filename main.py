@@ -18,6 +18,7 @@ import handling.left
 import handling.today
 import handling.week
 import handling.spends
+import handling.statistics
 
 
 ###
@@ -93,6 +94,9 @@ def week_handler(message):
 def week_handler(message):
     handling.spends.handle_spends(message, bot, database_service)
 
+@bot.message_handler(commands=["statistics"])
+def statistics_handler(message):
+    handling.statistics.handle_statistics(message, bot, database_service)
 
 bot.infinity_polling(timeout=3, long_polling_timeout=3)
 
