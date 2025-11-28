@@ -1,43 +1,39 @@
+"""
+Module for retrieving and sorting week expense data and calculation statistics for it.
+"""
 import datetime
 
 from dataclasses import dataclass
 
 from database.database_service import DatabaseService
-from logic.category_expense_calculator import CategoryExpenseCalculator, CategoryExpenseInfoDTO
-from messages import Messages
-from entities import Category, Expense
-
-from handling._args import extract_args, ArgumentError
-
-
-def handle_statistics(message, bot, database: DatabaseService):
-    try:
-        arguments = extract_args(message.text)
-
-        category = arguments[0]
-        if len(arguments) > 1:
-            raise ArgumentError("Wrong amount of arguments")
-        
-        # Model
-        model = get_model(message.chat.id, category, database)
-
-        # View
-        view_statistics(bot, message.chat.id, category, model)
-
-    except Exception as e:
-        raise e
-
+from entities import Category
 
 
 ###
-### Model & calculation
+### DTOs and expcetion
 ###
-
-
-### Retrieving data
 
 class NoExpensesException:
     pass
+
+@dataclass
+class WeekExpensesDTO:
+    week_start: datetime
+    week_end: datetime
+    expenses: list
+
+    def days(self) -> datetime.timedelta:
+        return self.week_end - self.week_start
+    
+@dataclass
+class WeekStatisicsDTO:
+    total: float
+    days: float
+
+
+###
+### Retrieving data
+###
 
 def get_model(chat_id, category, database: DatabaseService):
     
@@ -64,16 +60,10 @@ def get_model(chat_id, category, database: DatabaseService):
     return [(week, stat) for (week, stat) in zip(weeks, stats)]
 
 
+
+###
 ### Sorting data
-
-@dataclass
-class WeekExpensesDTO:
-    week_start: datetime
-    week_end: datetime
-    expenses: list
-
-    def days(self) -> datetime.timedelta:
-        return self.week_end - self.week_start
+###
 
 def init_week_edges(start_date:datetime.date, end_date: datetime.date):
     weeks = []
@@ -113,13 +103,12 @@ def split_into_weeks(expenses, weeks) -> None:
     for expense in expenses:
         week = update_week(expense.datetime.date(), week, weeks)
         week.expenses.append(expense)
-    
-### Calculating statistics
 
-@dataclass
-class WeekStatisicsDTO:
-    total: float
-    days: float
+
+
+###
+### Calculating statistics
+###
 
 def calculate_week_total_expense(weeks):
     stats = []
@@ -135,44 +124,3 @@ def calculate_week_total_expense(weeks):
         stats.append(WeekStatisicsDTO(total, days))
     
     return stats
-        
-
-
-###
-### View functions
-###
-
-def view_statistics(bot, chat_id, category, weeks_stats):
-
-    msg = ""
-
-    msg += Messages.STATS_HEADER.format(category)
-
-    start_date = weeks_stats[0][0].week_start
-    end_date = weeks_stats[-1][0].week_end
-    msg += Messages.STATS_DATES.format(start_date, end_date)
-
-    max_per_day = max([round(stat.total/stat.days,2) for (_, stat) in weeks_stats])
-
-    for i, (week, stat) in enumerate(weeks_stats):
-
-        total = round(stat.total, 2)
-        per_day = round(stat.total/stat.days, 2)
-        msg += Messages.STATS_WEEK.format(i+1, total, stat.days, per_day)
-
-        if per_day == max_per_day:
-            msg += Messages.STATS_MOST_PER_DAY
-        
-        msg += "\n\n"
-
-    bot.send_message(chat_id, msg, parse_mode="HTML")
-
-
-
-
-
-
-
-
-
-

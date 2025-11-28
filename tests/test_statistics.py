@@ -1,7 +1,7 @@
 import unittest
 import datetime
 
-from handling.statistics import init_week_edges, split_into_weeks, WeekExpensesDTO, calculate_week_total_expense
+from handling.statistics.model import init_week_edges, split_into_weeks, WeekExpensesDTO, calculate_week_total_expense
 from entities import Expense
 
 class TestWeekSorting(unittest.TestCase):
