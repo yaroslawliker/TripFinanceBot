@@ -146,11 +146,11 @@ def view_statistics(bot, chat_id, category, weeks_stats):
 
     msg = ""
 
-    msg += f"Statistics for '{category}'" + "\n"
+    msg += f"Statistics for <b>'{category}'</b>" + "\n"
 
     start_date = weeks_stats[0][0].week_start
     end_date = weeks_stats[-1][0].week_end
-    msg += f"Dates: {start_date} - {end_date}" + "\n"
+    msg += f"Dates: {start_date} - {end_date}" + "\n\n"
 
     max_per_day = max([round(stat.total/stat.days,2) for (_, stat) in weeks_stats])
 
@@ -158,14 +158,14 @@ def view_statistics(bot, chat_id, category, weeks_stats):
 
         total = round(stat.total, 2)
         per_day = round(stat.total/stat.days, 2)
-        msg += f"Week #{i}: spent {total} during {stat.days} days ({per_day} per day)."
+        msg += f"<b>Week {i+1}</b>:\n - spent {total}\n - during {stat.days} days\n - {per_day} per day"
 
         if per_day == max_per_day:
-            msg += "This month you spent the most per day."
+            msg += "(the most)"
         
         msg += "\n\n"
 
-    bot.send_message(chat_id, msg)
+    bot.send_message(chat_id, msg, parse_mode="HTML")
 
 
 
