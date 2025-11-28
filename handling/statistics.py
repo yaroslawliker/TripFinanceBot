@@ -60,6 +60,11 @@ def get_model(chat_id, category, database: DatabaseService):
     weeks = init_week_edges(start_date, end_date)      
     split_into_weeks(expenses, weeks)
 
+    # Getting week statistics
+    stats = calculate_week_total_expense(weeks)
+    
+    return stats
+
 
 def init_week_edges(start_date:datetime.date, end_date: datetime.date):
     weeks = []
@@ -98,10 +103,31 @@ def split_into_weeks(expenses, weeks) -> None:
     for expense in expenses:
         week = update_week(expense.datetime.date(), week, weeks)
         week.expenses.append(expense)
-
-        
-
-        
-        
-
     
+@dataclass
+class WeekStatisicsDTO:
+    total: float
+    days: float
+
+def calculate_week_total_expense(weeks):
+    stats = []
+
+    for week in weeks:
+        week: WeekExpensesDTO
+
+        # Getting days amount
+        days = (week.week_end - week.week_start).days
+        # Getting money sum
+        total = sum(map(lambda e: e.money, week.expenses))
+
+        stats.append(WeekStatisicsDTO(total, days))
+    
+    return stats
+        
+
+
+
+
+
+
+
