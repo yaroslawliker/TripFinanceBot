@@ -16,6 +16,8 @@ Smart money monitoring
 /today - check the money, apportioned for today
 /week - check the money, approtioned for this week
 
+/statistics <category> - view category data statistics about daily spends during weeks
+
 /superhelp - more detailed explanation
 """
 
@@ -52,6 +54,8 @@ For each category: today = budget/period*thisDayNum - sum(spends), where
 /week - check the money, approtioned for this week, in the simmilar way as /today.
 It accounts that the first or the last weeks of the periods may be less then 7 days.
 Intuitively, your week`s balance, is how much you can spend till the end of this week to keep yourself within the budget.
+
+/statistics or /stats &lt;category&gt; - view statistics about money spent every week, icnluding: days in the week, total spent, per-day spent
 """
 
     ADD_ARGUMENT_ERROR = "Wrong usage. Correct example:\n/add Transfer 150"
@@ -81,6 +85,7 @@ Intuitively, your week`s balance, is how much you can spend till the end of this
     SPENDS_TABLE_COLUMNS = "ID |  money  |  date time  |  purpose"
 
     # Statistics
+    STATS_WRONG_USAGE = "Wrong usage. Correct example:\n/statistics Transfer"
     STATS_HEADER = "Statistics for <b>'{0}'</b>\n"
     STATS_DATES = "Dates: {0} - {1}\n\n"
     STATS_WEEK = "<b>Week {0}</b>:\n - spent {1}\n - during {2} days\n - {3} per day"

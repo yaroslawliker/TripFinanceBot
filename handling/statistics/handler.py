@@ -1,6 +1,7 @@
-from database.database_service import DatabaseService
+from database.database_service import DatabaseService, NoSuchCategoryExistsException
 from handling._args import extract_args, ArgumentError
 
+from messages import Messages
 from handling.statistics.model import get_model
 from handling.statistics.view import view_statistics
 
@@ -20,5 +21,7 @@ def handle_statistics(message, bot, database: DatabaseService):
         # View
         view_statistics(bot, message.chat.id, category, model)
 
-    except Exception as e:
-        raise e
+    except NoSuchCategoryExistsException:
+        bot.send_message(message.chat.id, Messages.NO_SUCH_CATEGORY.format(category))
+    except (IndexError, ValueError):
+        bot.send_message(message.chat.id, Messages.STATS_WRONG_USAGE)

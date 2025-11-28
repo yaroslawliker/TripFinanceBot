@@ -94,7 +94,7 @@ def week_handler(message):
 def week_handler(message):
     handling.spends.handle_spends(message, bot, database_service)
 
-@bot.message_handler(commands=["statistics"])
+@bot.message_handler(commands=["statistics", "stats"])
 def statistics_handler(message):
     handling.statistics.handler.handle_statistics(message, bot, database_service)
 
