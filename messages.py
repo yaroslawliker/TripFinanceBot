@@ -79,3 +79,9 @@ Intuitively, your week`s balance, is how much you can spend till the end of this
     SPENDS_EMPTY = "No spends yet. You can write down them with /spend command."
     SPENDS_YEAR = "All dates are within {0} year"
     SPENDS_TABLE_COLUMNS = "ID |  money  |  date time  |  purpose"
+
+    # Statistics
+    STATS_HEADER = "Statistics for <b>'{0}'</b>\n"
+    STATS_DATES = "Dates: {0} - {1}\n\n"
+    STATS_WEEK = "<b>Week {0}</b>:\n - spent {1}\n - during {2} days\n - {3} per day"
+    STATS_MOST_PER_DAY = "(the most)"
