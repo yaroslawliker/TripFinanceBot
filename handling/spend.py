@@ -10,7 +10,7 @@ def handle_spend(message, bot, database: DatabaseService):
         money = float(arguments[1])
 
         if (len(arguments) > 2):
-            purpose = arguments[2]
+            purpose = ' '.join(arguments[2:])
         else:
             purpose = None
 
