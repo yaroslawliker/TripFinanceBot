@@ -1,8 +1,8 @@
-from datetime import datetime
-
 from database.database_service import DatabaseService, NoSuchCategoryExistsException
 from messages import Messages
 from handling._args import extract_args
+
+from entities import Expense
 
 
 def handle_spends(message, bot, database: DatabaseService):
@@ -60,14 +60,15 @@ def view_spends_data_html(category_name, expenses):
     list_str = ""
     list_str += Messages.SPENDS_TABLE_COLUMNS + "\n"
     
-    max_symbols = get_max_symbols(expenses)
+    max_id = get_max_symbols(expenses, lambda expense: expense.id)
+    max_money = get_max_symbols(expenses, lambda expense: expense.money)
                        
     for expense in expenses:
-        list_str += str(expense.id) + ".  "
+        list_str += str(expense.id) + calculate_indent(max_id, expense.id, 1) + "|  "
         
         # Money
         list_str += str(expense.money)
-        list_str += calculate_indent(max_symbols, expense.money, 2) + "|  "
+        list_str += calculate_indent(max_money, expense.money, 2) + "|  "
         
         # Date and time
         if same_year is not None:
@@ -77,7 +78,7 @@ def view_spends_data_html(category_name, expenses):
         list_str += f"{date_msg}"
         
         if expense.purpose is not None:
-            list_str += expense.purpose
+            list_str += "  |  " + expense.purpose
             
         list_str += "\n" 
         
@@ -92,10 +93,10 @@ def is_same_year(expenses):
             return False
     return True
 
-def get_max_symbols(expenses) -> int:
+def get_max_symbols(expenses, getter) -> int:
     
     return max(
-        [len(str(expense.money)) for expense in expenses]
+        [len(str(getter(expense))) for expense in expenses]
     )
     
 def calculate_indent(max_symbols, num, min_indent=1) -> str:
