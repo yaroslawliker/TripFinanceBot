@@ -32,3 +32,19 @@ class TestToday(unittest.TestCase):
         weeks_result = split_into_weeks(expenses)
         
         self.assertEqual(weeks_init, weeks_result)
+
+    def test_split_into_weeks_skipped(self):
+        
+        weeks_init = [
+            [Expense(0, 0, datetime.datetime(2025, 11, 3), None, 0)],
+            [Expense(0, 0, datetime.datetime(2025, 11, 30), None, 0)]
+        ]
+
+        expenses = [expense for expenses in weeks_init for expense in expenses]
+
+        weeks_result = split_into_weeks(expenses)
+
+        weeks_init.insert(1, [])
+        weeks_init.insert(1, [])
+        
+        self.assertEqual(weeks_init, weeks_result)

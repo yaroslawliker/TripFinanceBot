@@ -1,5 +1,7 @@
 import datetime
 
+from dataclasses import dataclass
+
 from database.database_service import DatabaseService
 from logic.category_expense_calculator import CategoryExpenseCalculator, CategoryExpenseInfoDTO
 from messages import Messages
@@ -23,6 +25,15 @@ def handle_statistics(message, bot, database: DatabaseService, expense_calculato
     except:
         pass
 
+###
+### Model & calculation
+###
+
+@dataclass
+class WeekExpensesDTO:
+    week_start: datetime
+    week_end: datetime
+    expenses: list
 
 def get_model(chat_id, category, database: DatabaseService):
     
@@ -41,6 +52,8 @@ def get_model(chat_id, category, database: DatabaseService):
         
     weeks = split_into_weeks(expenses)
 
+
+
 def split_into_weeks(expenses):
 
     weeks = []
@@ -49,24 +62,26 @@ def split_into_weeks(expenses):
     for expense in expenses:
 
         date = expense.datetime.date()
-        
+
+        # Checking if the week has been changed
+        prev_mon = prev_date - datetime.timedelta(days=prev_date.weekday())
+        this_mon = date    -   datetime.timedelta(days=date.weekday())
+        diff = this_mon - prev_mon
+
+
+
         # Calculating the end of previous week
-        if (date.weekday() <= prev_date.weekday() and date != prev_date):
+        if diff > datetime.timedelta(days=0):
+            weeks.append(new_week)
 
             # If a week or few were skipped
-            diff = date - prev_date
-            if (diff > datetime.timedelta(days=7)):
-                # Rolling back to mondays
-                prev_mon = prev_date - datetime.timedelta(days=prev_date.weekday())
-                this_mon = date    -   datetime.timedelta(days=prev_date.weekday())
+            if (diff > datetime.timedelta(days=8)):
 
-                diff = this_mon - prev_mon
                 full_weeks = (diff.days-1) // 7
                 # Adding empty weeks
                 for i in range(full_weeks):
                     weeks.append([])
 
-            weeks.append(new_week)
             new_week = []
         
         prev_date = date
