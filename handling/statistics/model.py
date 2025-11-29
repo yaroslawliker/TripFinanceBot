@@ -44,14 +44,14 @@ def get_model(chat_id, category, database: DatabaseService):
         raise NoExpensesException
 
     # Guessing dates of the category
-    if category.is_dated():
+    if not category.is_dated():
         start_date = expenses[0].datetime.date()
         end_date = expenses[-1].datetime.date()
         category.start_date = start_date
         category.end_date = end_date
 
     # Init weeks and split expenses amoung them
-    weeks = init_week_edges(start_date, end_date)      
+    weeks = init_week_edges(category.start_date, category.end_date)  
     split_into_weeks(expenses, weeks)
 
     # Getting week statistics
@@ -117,7 +117,7 @@ def calculate_week_total_expense(weeks):
         week: WeekExpensesDTO
 
         # Getting days amount
-        days = (week.week_end - week.week_start).days
+        days = (week.week_end - week.week_start).days + 1
         # Getting money sum
         total = sum(map(lambda e: e.money, week.expenses))
 
