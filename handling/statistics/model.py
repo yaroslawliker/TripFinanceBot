@@ -31,6 +31,10 @@ class WeekStatisicsDTO:
     total: float
     days: float
 
+@dataclass
+class StatisticsDTO:
+    week_statistics: list # of tuples (WeekExpenseDTO, WeekStatisicsDTO)
+    per_day_statistics: list
 
 ###
 ### Retrieving data
@@ -56,9 +60,16 @@ def get_model(chat_id, category, database: DatabaseService):
     split_into_weeks(expenses, weeks)
 
     # Getting week statistics
-    stats = calculate_week_total_expense(weeks)
+    week_total_expense = calculate_week_total_expense(weeks)
+    weeks_stats = [(week, stat) for (week, stat) in zip(weeks, week_total_expense)]
+
+    # Getting per day statistics
+    per_day_stats = calculate_weekdays_evarage(weeks)
     
-    return [(week, stat) for (week, stat) in zip(weeks, stats)]
+    return StatisticsDTO(
+        weeks_stats,
+        per_day_stats
+    )
 
 
 
@@ -178,8 +189,6 @@ def calculate_weekdays_evarage(weeks):
         mean(day) if len(day) != 0 else 0 
         for day in weekdays_money
     ]
-
-    print(weekdays_money)
 
     return averages
             

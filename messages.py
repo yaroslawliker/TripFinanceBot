@@ -98,3 +98,5 @@ Intuitively, your week`s balance, is how much you can spend till the end of this
     STATS_DATES = "Dates: {0} - {1}\n\n"
     STATS_WEEK = "<b>Week {0}</b>:\n - spent {1}\n - during {2} days\n - {3} per day"
     STATS_MOST_PER_DAY = "(the most)"
+    STATS_PER_DAY_HEADER = "<b>Average weekday spend:</b>\n"
+    DAY_SHORT_NAMES = "Mon Tue Wen Thu Fri Sat Sun"
