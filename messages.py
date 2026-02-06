@@ -73,6 +73,7 @@ Intuitively, your week`s balance, is how much you can spend till the end of this
     ADD_ARGUMENT_ERROR = "Wrong usage. Correct example:\n/add Transfer 150"
     ADD_CATEGORY_CREATED = "Category '{0}' created with budget {1}"
     CATEGORY_ALREADY_EXISTS = "Category '{0}' already exists."
+    CATEGORY_IS_ARCHIVED = "Category '{0}' is archived. /unarchive it to change it."
 
     NO_SUCH_CATEGORY = "Category '{0}' haven't been created yet."
 

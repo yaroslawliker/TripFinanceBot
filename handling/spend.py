@@ -1,4 +1,4 @@
-from database.database_service import DatabaseService, NoSuchCategoryExistsException
+from database.database_service import DatabaseService, NoSuchCategoryExistsException, CategoryIsArchivedException
 from messages import Messages
 from handling._args import extract_args
 
@@ -18,5 +18,7 @@ def handle_spend(message, bot, database: DatabaseService):
         bot.send_message(message.chat.id, Messages.SPEND_SUCCESS.format(category, money))
     except NoSuchCategoryExistsException:
         bot.send_message(message.chat.id, Messages.NO_SUCH_CATEGORY.format(category))
+    except CategoryIsArchivedException:
+        bot.send_message(message.chat.id, Messages.CATEGORY_IS_ARCHIVED.format(category))
     except (IndexError, ValueError) as e:
         bot.send_message(message.chat.id, Messages.SPEND_ARGUMENT_ERROR)

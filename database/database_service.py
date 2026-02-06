@@ -41,6 +41,11 @@ class ArchivatedIsAsUpdatedException(Exception):
         self.archived = archived
         super().__init__(f"Category is already {'archivated' if archived else 'unarchivated'}")
 
+class CategoryIsArchivedException(Exception):
+    def __init__(self, category_name:str):
+        self.category_name = category_name
+        super().__init__(f"Category '{category_name}' is archived and cannot be used for this operation")
+
 
 
 ### Database service class
@@ -97,6 +102,8 @@ class DatabaseService:
         category = self._categoryDAO.get_by_user_and_name(category_name, user_id)
         if category is None:
             raise NoSuchCategoryExistsException(user_id, category_name)
+        if category.archived:
+            raise CategoryIsArchivedException(category_name)
         
         category.budget = budget
         self._categoryDAO.update(category)
@@ -106,6 +113,8 @@ class DatabaseService:
         category = self._categoryDAO.get_by_user_and_name(category_name, user_id)
         if category is None:
             raise NoSuchCategoryExistsException(user_id, category_name)
+        if category.archived:
+            raise CategoryIsArchivedException(category_name)
         
         if (startdate >= enddate):
             raise StartDaysNotBeforeEndDateException(startdate, enddate)
@@ -164,6 +173,8 @@ class DatabaseService:
         category = self._categoryDAO.get_by_user_and_name(category_name, user_id)
         if category is None:
             raise NoSuchCategoryExistsException(user_id, category_name)
+        if category.archived:
+            raise CategoryIsArchivedException(category_name)
         
         dt = datetime.datetime.now()
         
@@ -177,6 +188,13 @@ class DatabaseService:
         return self._expenseDAO.get_all_by_category(category_id)
     
     def delete_expense_if_in_category(self, expense_id, category_id):
+        category = self._categoryDAO.get(category_id)
+        if category is None:
+            raise NoSuchCategoryExistsException(id=category_id)
+        if category.archived:
+            raise CategoryIsArchivedException(category.name)
+
         if not self._expenseDAO.exists_in_category(expense_id, category_id):
             raise ExpenseIsNotInTheCategory(f"No expense '{expense_id}' in categroy '{category_id}'")
+        
         self._expenseDAO.delete(expense_id)

@@ -1,6 +1,9 @@
 from messages import Messages
 from handling._args import extract_args
-from database.database_service import DatabaseService, NoSuchCategoryExistsException, ExpenseIsNotInTheCategory
+from database.database_service import DatabaseService,\
+    NoSuchCategoryExistsException,\
+    ExpenseIsNotInTheCategory,\
+    CategoryIsArchivedException
 
 
 def handle_canes_spend(message, bot, database_service: DatabaseService):
@@ -21,6 +24,8 @@ def handle_canes_spend(message, bot, database_service: DatabaseService):
 
     except NoSuchCategoryExistsException:
         bot.send_message(message.chat.id, Messages.NO_SUCH_CATEGORY.format(category))
+    except CategoryIsArchivedException:
+        bot.send_message(message.chat.id, Messages.CATEGORY_IS_ARCHIVED.format(category.name))
     except ExpenseIsNotInTheCategory:
         bot.send_message(message.chat.id, Messages.CANCEL_SPEND_NO_SUCH.format(expense_id, category))
     except (IndexError, ValueError):

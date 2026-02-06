@@ -53,6 +53,15 @@ class CategoryDAO(GenericDAO):
             return None
         else:
             return CategoryDAO._from_row(row)
+    
+    def get(self, id: int):
+        """ Returns category with given id, or None if not found """
+        cursor = self._connection.execute("SELECT * FROM categories WHERE id = ?", (id,))
+        row = cursor.fetchone()
+        if row == None:
+            return None
+        else:
+            return CategoryDAO._from_row(row)
         
     
     def get_all_by_user(self, chat_id:int, include_archived:bool = False) -> list:

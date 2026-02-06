@@ -1,5 +1,5 @@
 from handling._args import extract_args
-from database.database_service import DatabaseService, NoSuchCategoryExistsException
+from database.database_service import DatabaseService
 from messages import Messages
 from logic.category_expense_calculator import CategoryExpenseCalculator, CategoryExpenseInfoDTO
 
