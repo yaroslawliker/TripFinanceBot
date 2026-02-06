@@ -14,8 +14,9 @@ class CategoryDAO(GenericDAO):
         start_date = GenericDAO.str_to_date(row[3])
         end_date = GenericDAO.str_to_date(row[4])
         user_id = row[5]
+        archived = bool(row[6])
 
-        return Category(id, name, budget, start_date, end_date, user_id)
+        return Category(id, name, budget, start_date, end_date, user_id, archived)
 
     def add(self, category: Category):
         """
@@ -23,8 +24,8 @@ class CategoryDAO(GenericDAO):
         The id field is ignored, new id is stored in the database 
         """
         self._connection.execute(
-            "INSERT INTO categories(name, budget, start_date, end_date, chat_id) VALUES (?, ?, ?, ?, ?)", 
-            (category.name, category.budget, category.start_date, category.end_date, category.chat_id)
+            "INSERT INTO categories(name, budget, start_date, end_date, chat_id, archived) VALUES (?, ?, ?, ?, ?, ?)", 
+            (category.name, category.budget, category.start_date, category.end_date, category.chat_id, int(category.archived))
         )
 
     def exists(self, id):
@@ -36,11 +37,11 @@ class CategoryDAO(GenericDAO):
     def update(self, category: Category):
         """ Updates the given category using it's id"""
         self._connection.execute(
-            "UPDATE categories SET name=?, budget=?, start_date=?, end_date=?, chat_id=? WHERE id=?",
+            "UPDATE categories SET name=?, budget=?, start_date=?, end_date=?, chat_id=?, archived=? WHERE id=?",
             (
                 category.name, category.budget, 
                 GenericDAO.date_to_str(category.start_date), GenericDAO.date_to_str(category.end_date), 
-                category.chat_id, category.id
+                category.chat_id, int(category.archived), category.id
             )
         )
     
@@ -54,11 +55,14 @@ class CategoryDAO(GenericDAO):
             return CategoryDAO._from_row(row)
         
     
-    def get_all_by_user(self, chat_id:int) -> list:
+    def get_all_by_user(self, chat_id:int, include_archived:bool = False) -> list:
         """ Returns all categories of given user"""
         categories = []
+        where_clause = "chat_id = ?"
+        if not include_archived:
+            where_clause += " AND archived = 0"
 
-        result = self._connection.execute("SELECT * FROM categories WHERE chat_id = ?", (chat_id,)).fetchall()
+        result = self._connection.execute(f"SELECT * FROM categories WHERE ({where_clause})", (chat_id,)).fetchall()
 
         for row in result:
             categories.append(CategoryDAO._from_row(row))

@@ -84,7 +84,7 @@ class DatabaseService:
         if not (self._categoryDAO.get_by_user_and_name(name, user_id) is None):
             raise CategoryAlreadyExistsException(user_id, name)
         
-        self._categoryDAO.add(Category(None, name, budget, None, None, user_id))
+        self._categoryDAO.add(Category(None, name, budget, None, None, user_id, False))
     
     def change_budget(self, user_id:int, category_name:str, budget:float):
 
@@ -116,8 +116,8 @@ class DatabaseService:
         
         return category
     
-    def get_categories(self, user_id:int) -> list:        
-        return self._categoryDAO.get_all_by_user(user_id)
+    def get_categories(self, user_id:int, include_archived=False) -> list:        
+        return self._categoryDAO.get_all_by_user(user_id, include_archived)
     
 
     ###

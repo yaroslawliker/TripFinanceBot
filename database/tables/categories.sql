@@ -5,5 +5,6 @@ CREATE TABLE categories (
     start_date TEXT,
     end_date TEXT,
     chat_id INTEGER NOT NULL,
-    FOREIGN KEY(chat_id) REFERENCES users(chat_id)
+    FOREIGN KEY(chat_id) REFERENCES users(chat_id),
+    archived INTEGER DEFAULT 0
 )

@@ -9,13 +9,14 @@ class Category:
     def __init__(self, id: int, 
                  name: str, budget: float, 
                  start_date: datetime.date, end_date: datetime.date, 
-                 user_id: int):
+                 user_id: int, archived: bool = False):
         self.id = id
         self.name = name
         self.budget = budget
         self.start_date = start_date
         self.end_date = end_date
         self.chat_id = user_id
+        self.archived = archived
     
     def is_dated(self) -> bool:
         """Checks if end_date and start_end are set."""
