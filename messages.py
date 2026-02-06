@@ -19,6 +19,10 @@ Smart money monitoring
 
 /statistics <category> - view category data statistics about daily spends during weeks
 
+/archive <category> - archive the category
+/unarchive <category> - unarchive the category
+/check_archive - check the list of archived categories
+
 /superhelp - more detailed explanation
 """
 
@@ -60,6 +64,10 @@ It accounts that the first or the last weeks of the periods may be less then 7 d
 Intuitively, your week`s balance, is how much you can spend till the end of this week to keep yourself within the budget.
 
 /statistics or /stats &lt;category&gt; - view statistics about money spent every week, icnluding: days in the week, total spent, per-day spent
+
+/archive <category> - archive the category (it won't show up in the list of categories)
+/unarchive <category> - unarchive the category (return it back from archive)
+/check_archive - check the list of archived categories and their 'left / budget'
 """
 
     ADD_ARGUMENT_ERROR = "Wrong usage. Correct example:\n/add Transfer 150"
@@ -100,3 +108,12 @@ Intuitively, your week`s balance, is how much you can spend till the end of this
     STATS_MOST_PER_DAY = "(the most)"
     STATS_PER_DAY_HEADER = "<b>Average weekday spend:</b>\n"
     DAY_SHORT_NAMES = "Mon Tue Wen Thu Fri Sat Sun"
+
+    # Archive and unarchive
+    ARCHIVATE_WRONG_USAGE = "Wrong usage. Correct example:\n/{0} Transfer"
+    ARCHIVATE_SUCCESS = "Category '{0}' is now {1}."
+    ARCHIVATE_IS_ALREADY_ARCHIVATED = "Category '{0}' was already {1}."
+    # Check archive
+    CHECK_ARCHIVE_WRONG_USAGE = "Wrong usage: the command does not take any arguments. Correct example just:\n/check_archive"
+    NO_ARCHIVED_CATEGORIES = "No archived categories yet."
+    ARCHIVED_CATEGORIES = "Archived categories:\n"

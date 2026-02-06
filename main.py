@@ -20,6 +20,8 @@ import handling.today
 import handling.week
 import handling.spends
 import handling.statistics.handler
+import handling.archivation
+import handling.check_archive
 
 
 ###
@@ -102,6 +104,25 @@ def week_handler(message):
 @bot.message_handler(commands=["statistics", "stats"])
 def statistics_handler(message):
     handling.statistics.handler.handle_statistics(message, bot, database_service)
+
+
+@bot.message_handler(commands=["archive", "a"])
+def archivate_handler(message):
+    handling.archivation.handle_archivate(message, bot, database_service)
+
+@bot.message_handler(commands=["unarchive", "una"])
+def unarchivate_handler(message):
+    handling.archivation.handle_unarchivate(message, bot, database_service)
+
+@bot.message_handler(commands=["check_archive", "ca"])
+def check_archivate_handler(message):
+    handling.check_archive.handle_check_archive(
+        message, bot, 
+        database_service, 
+        expense_calculator
+    )
+
+
 
 bot.infinity_polling(timeout=3, long_polling_timeout=3)
 

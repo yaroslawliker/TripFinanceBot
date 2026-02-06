@@ -36,6 +36,12 @@ class StartDaysNotBeforeEndDateException(ValueError):
 class ExpenseIsNotInTheCategory(Exception):
     pass
 
+class ArchivatedIsAsUpdatedException(Exception):
+    def __init__(self, archived:bool):
+        self.archived = archived
+        super().__init__(f"Category is already {'archivated' if archived else 'unarchivated'}")
+
+
 
 ### Database service class
 class DatabaseService:
@@ -108,6 +114,32 @@ class DatabaseService:
         category.end_date = enddate
 
         self._categoryDAO.update(category)
+
+
+    def _set_archived(self, user_id:int, category_name:str, archived:bool):
+        category = self._categoryDAO.get_by_user_and_name(category_name, user_id)
+        if category is None:
+            raise NoSuchCategoryExistsException(user_id, category_name)
+        if (category.archived == archived):
+            raise ArchivatedIsAsUpdatedException(archived)
+        
+        category.archived = archived
+        self._categoryDAO.update(category)
+
+    def archivate(self, user_id:int, category_name:str):
+        """
+        Archivates the category. 
+        If the category is already archivated, raises ArchivatedIsAsUpdatedException.
+        """
+        self._set_archived(user_id, category_name, True)
+
+    def unarchivate(self, user_id:int, category_name:str):
+        """
+        Unarchivates the category.
+        If the category is already not archived, raises ArchivatedIsAsUpdatedException.
+        """
+        self._set_archived(user_id, category_name, False)
+
        
     def get_category(self, user_id:int, category_name:str) -> Category:
         category = self._categoryDAO.get_by_user_and_name(category_name, user_id)
@@ -118,6 +150,10 @@ class DatabaseService:
     
     def get_categories(self, user_id:int, include_archived=False) -> list:        
         return self._categoryDAO.get_all_by_user(user_id, include_archived)
+    
+    def get_archived_categories(self, user_id:int) -> list:
+        categoeis = self._categoryDAO.get_all_by_user(user_id, include_archived=True)
+        return [category for category in categoeis if category.archived]
     
 
     ###
